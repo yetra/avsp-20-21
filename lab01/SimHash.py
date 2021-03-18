@@ -22,7 +22,7 @@ def simhash(text, output_size=128):
 
     output = ''.join('1' if x >= 0 else '0' for x in sh)
 
-    return hex(int(output, 2))
+    return hex(int(output, 2))[2:]
 
 
 if __name__ == '__main__':
