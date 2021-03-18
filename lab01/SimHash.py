@@ -4,6 +4,13 @@ import numpy as np
 
 
 def simhash(text, output_size=128):
+    """
+    Generates the hash of a given text using the SimHash algorithm.
+
+    :param text: the text to hash
+    :param output_size: the size of the hash to generate
+    :return: the hash of a given text
+    """
     terms = text.strip().split()
     sh = np.zeros(output_size, dtype=int)
 
