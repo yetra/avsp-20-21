@@ -1,25 +1,19 @@
 import hashlib
 
+import numpy as np
+
 
 def simhash(text, output_size=128):
     terms = text.strip().split()
-    sh = [0] * output_size
+    sh = np.zeros(output_size, dtype=int)
 
     for term in terms:
-        digest = hashlib.md5(term.encode()).digest()
+        digest = hashlib.md5(term.encode()).hexdigest()
+        bitstring = bin(int(digest, 16))[2:].zfill(output_size)
+        bits = np.array(list(bitstring), dtype=int)
+        sh += 2 * bits - 1
 
-        for i in range(output_size):
-            byte_i = i // 8
-            bit_i = i % 8
-
-            bit = (digest[byte_i] >> bit_i) & 1
-
-            if bit:
-                sh[i] += 1
-            else:
-                sh[i] -= 1
-
-    output = ''.join(map(lambda x: '1' if x >= 0 else '0', sh))
+    output = ''.join('1' if x >= 0 else '0' for x in sh)
 
     return hex(int(output, 2))
 
