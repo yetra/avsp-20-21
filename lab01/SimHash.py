@@ -5,11 +5,11 @@ import numpy as np
 
 def simhash(text, output_size=128):
     """
-    Generates the hash of a given text using the SimHash algorithm.
+    Generates the hash (in bit array form) of a given text using the SimHash algorithm.
 
     :param text: the text to hash
     :param output_size: the size of the hash to generate
-    :return: the hash of a given text
+    :return: the hash of a given text in bit array form
     """
     terms = text.strip().split()
     sh = np.zeros(output_size, dtype=int)
@@ -19,9 +19,7 @@ def simhash(text, output_size=128):
         bits = np.unpackbits(np.frombuffer(digest, dtype=np.uint8))
         sh = (sh + 2 * bits) - 1
 
-    output = ''.join('1' if x >= 0 else '0' for x in sh)
-
-    return hex(int(output, 2))[2:]
+    return np.where(sh >= 0, 1, 0)
 
 
 if __name__ == '__main__':
