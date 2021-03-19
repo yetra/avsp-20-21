@@ -2,7 +2,8 @@ import numpy as np
 
 
 def lsh(hashes, num_bands=8):
-    powers_of_2 = 2 ** np.arange(16)[::-1]
+    band_size = len(hashes[0]) / num_bands
+    powers_of_2 = 2 ** np.arange(band_size)[::-1]
 
     candidates = {i: set() for i in range(len(hashes))}
 
@@ -10,7 +11,7 @@ def lsh(hashes, num_bands=8):
         buckets = {}
 
         for i, text_hash in enumerate(hashes):
-            band_start, band_end = band * 16, (band + 1) * 16
+            band_start, band_end = band * band_size, (band + 1) * band_size
             band_bits = text_hash[band_start:band_end]
             band_value = band_bits.dot(powers_of_2)
 
