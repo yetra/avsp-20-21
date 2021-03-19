@@ -22,5 +22,12 @@ def simhash(text, output_size=128):
     return np.where(sh >= 0, 1, 0)
 
 
+def hex_string(bit_array):
+    """Converts the given bit array to a hex string."""
+    bit_string = ''.join(map(str, bit_array))
+
+    return hex(int(bit_string, 2))[2:]
+
+
 if __name__ == '__main__':
     print(simhash('fakultet elektrotehnike i racunarstva'))
