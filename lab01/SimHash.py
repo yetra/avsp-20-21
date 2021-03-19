@@ -53,14 +53,9 @@ def sequential_search(file_path):
 
     :param file_path: the path of the file containing texts and queries
     """
-    text_hashes = []
-
     with open(file_path) as file:
         num_texts = int(next(file).strip())
-
-        for _ in range(num_texts):
-            line = next(file).strip()
-            text_hashes.append(simhash(line))
+        text_hashes = [simhash(next(file).strip()) for _ in range(num_texts)]
 
         num_queries = int(next(file).strip())
 
