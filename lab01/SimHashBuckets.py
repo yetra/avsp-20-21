@@ -44,7 +44,8 @@ def lsh_search(file_path):
     Performs a search of similar texts based on queries
     specified in the given file and LSH similarity candidates.
 
-    Similar files are identified using the SimHash algorithm.
+    Actually similar files among the LSH candidates are identified
+    based on the Hamming distance of their SimHash signatures.
 
     This function expects the file to be in the following format:
     * the first line contains the number of texts to read - N
