@@ -2,6 +2,15 @@ import numpy as np
 
 
 def lsh(text_hashes, num_bands=8):
+    """
+    Finds candidates for text similarity using the LSH algorithm.
+
+    :param text_hashes: the hashes of text documents to analyse
+    :param num_bands: the number of bands for splitting the hashes
+    :return: a dict of candidates for text similarity
+             * key - index of text
+             * value - set of indices of similarity candidates
+    """
     band_size = len(text_hashes[0]) / num_bands
     powers_of_2 = 2 ** np.arange(band_size)[::-1]
 
