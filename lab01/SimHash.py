@@ -15,10 +15,9 @@ def simhash(text, output_size=128):
     sh = np.zeros(output_size, dtype=int)
 
     for term in terms:
-        digest = hashlib.md5(term.encode()).hexdigest()
-        bitstring = bin(int(digest, 16))[2:].zfill(output_size)
-        bits = np.array(list(bitstring), dtype=int)
-        sh += 2 * bits - 1
+        digest = hashlib.md5(term.encode()).digest()
+        bits = np.unpackbits(np.frombuffer(digest, dtype=np.uint8))
+        sh = (sh + 2 * bits) - 1
 
     output = ''.join('1' if x >= 0 else '0' for x in sh)
 
