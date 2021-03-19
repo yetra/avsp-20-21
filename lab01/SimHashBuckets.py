@@ -2,7 +2,7 @@ import numpy as np
 
 
 def lsh(hashes, num_bands=8):
-    candidates = dict.fromkeys(range(len(hashes)), set())
+    candidates = {i: set() for i in range(len(hashes))}
 
     for band in range(num_bands):
         buckets = {}
