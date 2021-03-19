@@ -12,18 +12,13 @@ def lsh(text_hashes, num_bands=8):
 
         for text_idx, text_hash in enumerate(text_hashes):
             start, end = band * band_size, (band + 1) * band_size
-            band_bits = text_hash[start:end]
-            band_value = band_bits.dot(powers_of_2)
+            band_value = text_hash[start:end].dot(powers_of_2)
 
-            if band_value in buckets:
-                bucket = buckets[band_value]
+            bucket = buckets.get(band_value, set())
 
-                for idx in bucket:
-                    candidates[text_idx].add(idx)
-                    candidates[idx].add(text_idx)
-
-            else:
-                bucket = set()
+            for idx in bucket:
+                candidates[text_idx].add(idx)
+                candidates[idx].add(text_idx)
 
             bucket.add(text_idx)
             buckets[band_value] = bucket
