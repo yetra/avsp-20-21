@@ -1,3 +1,5 @@
+import sys
+
 import numpy as np
 
 from SimHash import simhash
@@ -78,3 +80,7 @@ def lsh_search(file_path):
                     num_diff_texts += 1
 
             print(num_diff_texts)
+
+
+if __name__ == '__main__':
+    lsh_search(sys.argv[1])
