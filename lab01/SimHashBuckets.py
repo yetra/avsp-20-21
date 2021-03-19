@@ -15,7 +15,7 @@ def lsh(text_hashes, num_bands=8):
              * key - index of text
              * value - set of indices of similarity candidates
     """
-    band_size = len(text_hashes[0]) / num_bands
+    band_size = len(text_hashes[0]) // num_bands
     powers_of_2 = 2 ** np.arange(band_size)[::-1]
 
     candidates = {i: set() for i in range(len(text_hashes))}
