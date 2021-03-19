@@ -6,7 +6,8 @@ import numpy as np
 
 def simhash(text, output_size=128):
     """
-    Generates the hash (in bit array form) of a given text using the SimHash algorithm.
+    Generates the hash (in bit array form) of a given text
+    using the SimHash algorithm.
 
     :param text: the text to hash
     :param output_size: the size of the hash to generate
@@ -24,7 +25,12 @@ def simhash(text, output_size=128):
 
 
 def hex_string(bit_array):
-    """Converts the given bit array to a hex string."""
+    """
+    Converts the given bit array to a hex string.
+
+    :param bit_array: the bit array to convert
+    :return: the hex string representation of the given bit array
+    """
     bit_string = ''.join(map(str, bit_array))
 
     return hex(int(bit_string, 2))[2:]
