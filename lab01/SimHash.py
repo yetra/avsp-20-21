@@ -36,42 +36,39 @@ def hex_string(bit_array):
     return hex(int(bit_string, 2))[2:]
 
 
-def sequential_search(file_path):
+def sequential_search():
     """
-    Performs a sequential search of similar texts based on queries
-    specified in the given file.
+    Performs a sequential search of similar texts based on
+    user-specified queries.
 
     Similar files are identified based on the Hamming distance of
     their SimHash signatures.
 
-    This function expects the file to be in the following format:
-    * the first line contains the number of texts to read - N
-    * the next N lines are the N texts with space-separated tokens
-    * the (N+1)-th line contains the number of queries to perform - Q
-    * the next Q lines are the Q queries of the form - I K
-      - output the number of texts whose hashes differ from
+    This function expects user input of the following format:
+    * the first input contains the number of texts to read - N
+    * the next N inputs are the N texts with space-separated tokens
+    * the (N+1)-th input contains the number of queries to perform - Q
+    * the next Q inputs are the Q queries of the form - I K
+      * output the number of texts whose hashes differ from
         the hash of the I-th text by at most K bits
-
-    :param file_path: the path of the file containing texts and queries
     """
-    with open(file_path) as file:
-        num_texts = int(next(file).strip())
-        text_hashes = [simhash(next(file).strip()) for _ in range(num_texts)]
+    num_texts = int(next(sys.stdin).rstrip())
+    text_hashes = [simhash(next(sys.stdin).rstrip()) for _ in range(num_texts)]
 
-        num_queries = int(next(file).strip())
+    num_queries = int(next(sys.stdin).rstrip())
 
-        for _ in range(num_queries):
-            i, k = map(int, next(file).strip().split())
-            ith_hash = text_hashes[i]
+    for _ in range(num_queries):
+        i, k = map(int, next(sys.stdin).rstrip().split())
+        ith_hash = text_hashes[i]
 
-            num_diff_texts = -1  # excluding the i-th hash
+        num_diff_texts = -1  # excluding the i-th hash
 
-            for text_hash in text_hashes:
-                if (ith_hash != text_hash).sum() <= k:
-                    num_diff_texts += 1
+        for text_hash in text_hashes:
+            if (ith_hash != text_hash).sum() <= k:
+                num_diff_texts += 1
 
-            print(num_diff_texts)
+        print(num_diff_texts)
 
 
 if __name__ == '__main__':
-    sequential_search(sys.argv[1])
+    sequential_search()

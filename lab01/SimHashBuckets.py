@@ -39,44 +39,41 @@ def lsh(text_hashes, num_bands=8):
     return candidates
 
 
-def lsh_search(file_path):
+def lsh_search():
     """
-    Performs a search of similar texts based on queries
-    specified in the given file and LSH similarity candidates.
+    Performs a search of similar texts among LSH similarity candidates
+    based on user-specified queries.
 
     Actually similar files among the LSH candidates are identified
     based on the Hamming distance of their SimHash signatures.
 
-    This function expects the file to be in the following format:
-    * the first line contains the number of texts to read - N
-    * the next N lines are the N texts with space-separated tokens
-    * the (N+1)-th line contains the number of queries to perform - Q
-    * the next Q lines are the Q queries of the form - I K
-      - output the number of texts whose hashes differ from
+    This function expects user input of the following format:
+    * the first input contains the number of texts to read - N
+    * the next N inputs are the N texts with space-separated tokens
+    * the (N+1)-th input contains the number of queries to perform - Q
+    * the next Q inputs are the Q queries of the form - I K
+      * output the number of texts whose hashes differ from
         the hash of the I-th text by at most K bits
-
-    :param file_path: the path of the file containing texts and queries
     """
-    with open(file_path) as file:
-        num_texts = int(next(file).strip())
-        text_hashes = [simhash(next(file).strip()) for _ in range(num_texts)]
+    num_texts = int(next(sys.stdin).rstrip())
+    text_hashes = [simhash(next(sys.stdin).rstrip()) for _ in range(num_texts)]
 
-        candidates = lsh(text_hashes)
+    candidates = lsh(text_hashes)
 
-        num_queries = int(next(file).strip())
+    num_queries = int(next(sys.stdin).rstrip())
 
-        for _ in range(num_queries):
-            i, k = map(int, next(file).strip().split())
-            ith_candidates = candidates.get(i, set())
+    for _ in range(num_queries):
+        i, k = map(int, next(sys.stdin).rstrip().split())
+        ith_candidates = candidates.get(i, set())
 
-            num_diff_texts = 0
+        num_diff_texts = 0
 
-            for text_idx in ith_candidates:
-                if (text_hashes[i] != text_hashes[text_idx]).sum() <= k:
-                    num_diff_texts += 1
+        for text_idx in ith_candidates:
+            if (text_hashes[i] != text_hashes[text_idx]).sum() <= k:
+                num_diff_texts += 1
 
-            print(num_diff_texts)
+        print(num_diff_texts)
 
 
 if __name__ == '__main__':
-    lsh_search(sys.argv[1])
+    lsh_search()
