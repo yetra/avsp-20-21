@@ -3,17 +3,17 @@ from itertools import combinations
 from collections import defaultdict
 
 
-def print_output(item_counts, item_pairs, threshold):
+def print_output(item_counts, freq_pairs, threshold):
     """Prints the PCY algorithm output."""
     # number of frequent pairs - A-priori
     num_freq_items = sum(c for c in item_counts.values() if c >= threshold)
     print(num_freq_items * (num_freq_items - 1) / 2)
 
     # number of frequent pairs - PCY
-    print(len(item_pairs))
+    print(len(freq_pairs))
 
     # frequent pair counts (descending)
-    print(sorted(item_pairs.values(), reverse=True))
+    print(sorted(freq_pairs.values(), reverse=True))
 
 
 def pcy(num_baskets, num_buckets, threshold, basket_input):
@@ -50,7 +50,7 @@ def pcy(num_baskets, num_buckets, threshold, basket_input):
                 buckets[k] += 1
 
     # third pass - count frequent item pairs
-    item_pairs = defaultdict(int)
+    freq_pairs = defaultdict(int)
 
     for basket in baskets:
         pairs = combinations(basket, 2)
@@ -60,9 +60,9 @@ def pcy(num_baskets, num_buckets, threshold, basket_input):
                 k = ((i * len(item_counts)) + j) % num_buckets
 
                 if buckets[k] >= threshold:
-                    item_pairs[i, j] += 1
+                    freq_pairs[i, j] += 1
 
-    print_output(item_counts, item_pairs, threshold)
+    print_output(item_counts, freq_pairs, threshold)
 
 
 if __name__ == '__main__':
