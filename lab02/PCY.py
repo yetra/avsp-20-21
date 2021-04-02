@@ -1,21 +1,17 @@
-def pcy():
-    baskets = [[]]
+import sys
 
-    num_baskets = 0
-    s = 0
-    threshold = s * num_baskets
-    num_buckets = 0
 
+def pcy(num_baskets, num_buckets, threshold, basket_input):
     # first pass
     item_counts = {}
-    for basket in baskets:
+    for basket in basket_input:
         for item in basket:
             item_counts[item] += 1
 
     buckets = {}
 
     # second pass
-    for basket in baskets:
+    for basket in basket_input:
         pairs = []
 
         for i, j in pairs:
@@ -26,7 +22,7 @@ def pcy():
     # third pass
     item_pairs = {}
 
-    for basket in baskets:
+    for basket in basket_input:
         pairs = []
 
         for i, j in pairs:
@@ -35,3 +31,11 @@ def pcy():
 
                 if buckets[k] >= threshold:
                     item_pairs[i, j] += 1
+
+
+if __name__ == '__main__':
+    num_baskets = int(sys.stdin.readline().rstrip())
+    threshold = int(sys.stdin.readline().rstrip()) * num_baskets
+    num_buckets = int(sys.stdin.readline().rstrip())
+
+    pcy(num_baskets, num_buckets, threshold, sys.stdin)
