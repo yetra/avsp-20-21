@@ -3,6 +3,18 @@ from itertools import combinations
 from collections import defaultdict
 
 
+def print_output(item_counts, item_pairs, threshold):
+    # number of frequent pairs - A-priori
+    num_freq_items = sum(c for c in item_counts.values() if c >= threshold)
+    print(num_freq_items * (num_freq_items - 1) / 2)
+
+    # number of frequent pairs - PCY
+    print(len(item_pairs))
+
+    # frequent pair counts (descending)
+    print(sorted(item_pairs.values(), reverse=True))
+
+
 def pcy(num_baskets, num_buckets, threshold, basket_input):
     baskets = []
 
@@ -39,6 +51,8 @@ def pcy(num_baskets, num_buckets, threshold, basket_input):
 
                 if buckets[k] >= threshold:
                     item_pairs[i, j] += 1
+
+    print_output(item_counts, item_pairs, threshold)
 
 
 if __name__ == '__main__':
