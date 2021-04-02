@@ -2,16 +2,21 @@ import sys
 
 
 def pcy(num_baskets, num_buckets, threshold, basket_input):
+    baskets = []
+
     # first pass
     item_counts = {}
-    for basket in basket_input:
+    for basket_string in basket_input:
+        basket = list(map(int, basket_string.rstrip().split()))
+        baskets.append(basket)
+
         for item in basket:
             item_counts[item] += 1
 
     buckets = {}
 
     # second pass
-    for basket in basket_input:
+    for basket in baskets:
         pairs = []
 
         for i, j in pairs:
@@ -22,7 +27,7 @@ def pcy(num_baskets, num_buckets, threshold, basket_input):
     # third pass
     item_pairs = {}
 
-    for basket in basket_input:
+    for basket in baskets:
         pairs = []
 
         for i, j in pairs:
