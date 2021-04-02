@@ -67,7 +67,7 @@ def pcy(num_baskets, num_buckets, threshold, basket_input):
 
 if __name__ == '__main__':
     num_baskets = int(sys.stdin.readline().rstrip())
-    threshold = int(sys.stdin.readline().rstrip()) * num_baskets
+    threshold = float(sys.stdin.readline().rstrip()) * num_baskets
     num_buckets = int(sys.stdin.readline().rstrip())
 
     pcy(num_baskets, num_buckets, threshold, sys.stdin)
