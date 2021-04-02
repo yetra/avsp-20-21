@@ -28,7 +28,7 @@ def pcy(num_baskets, num_buckets, threshold, basket_input):
     """
     baskets = []
 
-    # first pass
+    # first pass - count individual items
     item_counts = defaultdict(int)
 
     for basket_string in basket_input:
@@ -38,7 +38,7 @@ def pcy(num_baskets, num_buckets, threshold, basket_input):
         for item in basket:
             item_counts[item] += 1
 
-    # second pass
+    # second pass - hash each item pair into a bucket and increase its count
     buckets = defaultdict(int)
 
     for basket in baskets:
@@ -49,7 +49,7 @@ def pcy(num_baskets, num_buckets, threshold, basket_input):
                 k = ((i * len(item_counts)) + j) % num_buckets
                 buckets[k] += 1
 
-    # third pass
+    # third pass - count frequent item pairs
     item_pairs = defaultdict(int)
 
     for basket in baskets:
