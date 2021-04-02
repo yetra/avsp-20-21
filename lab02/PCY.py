@@ -4,6 +4,7 @@ from collections import defaultdict
 
 
 def print_output(item_counts, item_pairs, threshold):
+    """Prints the PCY algorithm output."""
     # number of frequent pairs - A-priori
     num_freq_items = sum(c for c in item_counts.values() if c >= threshold)
     print(num_freq_items * (num_freq_items - 1) / 2)
@@ -16,6 +17,15 @@ def print_output(item_counts, item_pairs, threshold):
 
 
 def pcy(num_baskets, num_buckets, threshold, basket_input):
+    """
+    Performs the PCY algorithm and prints the results.
+
+    :param num_baskets: the number of baskets containing items
+    :param num_buckets: the number of buckets to create
+    :param threshold: the threshold to cross to be considered frequent
+    :param basket_input: a file-like object where each basket is in its own
+                         line and items are separated by a single space
+    """
     baskets = []
 
     # first pass
