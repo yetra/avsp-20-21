@@ -6,7 +6,7 @@ from collections import defaultdict
 def print_output(item_counts, freq_pairs, threshold):
     """Prints the PCY algorithm output."""
     # number of frequent pairs - A-priori
-    num_freq_items = sum(c for c in item_counts.values() if c >= threshold)
+    num_freq_items = sum(c >= threshold for c in item_counts.values())
     print(num_freq_items * (num_freq_items - 1) / 2)
 
     # number of frequent pairs - PCY
