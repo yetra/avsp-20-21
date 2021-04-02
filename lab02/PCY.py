@@ -13,7 +13,10 @@ def print_output(item_counts, freq_pairs, threshold):
     print(len(freq_pairs))
 
     # frequent pair counts (descending)
-    print(sorted(freq_pairs.values(), reverse=True))
+    sorted_pair_counts = sorted(freq_pairs.values(), reverse=True)
+
+    for count in sorted_pair_counts:
+        print(count)
 
 
 def pcy(num_baskets, num_buckets, threshold, basket_input):
