@@ -1,11 +1,13 @@
 import sys
+from collections import defaultdict
 
 
 def pcy(num_baskets, num_buckets, threshold, basket_input):
     baskets = []
 
     # first pass
-    item_counts = {}
+    item_counts = defaultdict(int)
+
     for basket_string in basket_input:
         basket = list(map(int, basket_string.rstrip().split()))
         baskets.append(basket)
@@ -13,7 +15,7 @@ def pcy(num_baskets, num_buckets, threshold, basket_input):
         for item in basket:
             item_counts[item] += 1
 
-    buckets = {}
+    buckets = defaultdict(int)
 
     # second pass
     for basket in baskets:
@@ -25,7 +27,7 @@ def pcy(num_baskets, num_buckets, threshold, basket_input):
                 buckets[k] += 1
 
     # third pass
-    item_pairs = {}
+    item_pairs = defaultdict(int)
 
     for basket in baskets:
         pairs = []
