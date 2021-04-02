@@ -1,4 +1,5 @@
 import sys
+from itertools import combinations
 from collections import defaultdict
 
 
@@ -15,11 +16,11 @@ def pcy(num_baskets, num_buckets, threshold, basket_input):
         for item in basket:
             item_counts[item] += 1
 
+    # second pass
     buckets = defaultdict(int)
 
-    # second pass
     for basket in baskets:
-        pairs = []
+        pairs = combinations(basket, 2)
 
         for i, j in pairs:
             if item_counts[i] >= threshold and item_counts[j] >= threshold:
@@ -30,7 +31,7 @@ def pcy(num_baskets, num_buckets, threshold, basket_input):
     item_pairs = defaultdict(int)
 
     for basket in baskets:
-        pairs = []
+        pairs = combinations(basket, 2)
 
         for i, j in pairs:
             if item_counts[i] >= threshold and item_counts[j] >= threshold:
