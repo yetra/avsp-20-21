@@ -1,4 +1,5 @@
 import sys
+from decimal import Decimal, ROUND_HALF_UP
 
 import numpy as np
 
@@ -99,3 +100,14 @@ if __name__ == '__main__':
         for user, rating in enumerate(item_ratings):
             if rating != 'X':
                 ratings[item][user] = int(rating)
+
+    cf = CollaborativeFiltering(ratings, num_items, num_users)
+
+    num_queries = int(sys.stdin.readline().rstrip())
+
+    for _ in range(num_queries):
+        item, user, mode, k = map(int, sys.stdin.readline().rstrip().split())
+        rating = cf.predict_rating(item, user, k, mode)
+
+        print(Decimal(Decimal(rating).quantize(
+            Decimal('.001'), rounding=ROUND_HALF_UP)))
