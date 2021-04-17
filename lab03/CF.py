@@ -3,6 +3,16 @@ import sys
 import numpy as np
 
 
+def pearson_sim(x, y):
+    """Calculates the Pearson similarity between two ratings vectors."""
+    return np.corrcoef(subtract_nonzero_mean(x), subtract_nonzero_mean(y))[0][1]
+
+
+def subtract_nonzero_mean(x):
+    """Subtracts the mean of nonzero elements from the nonzero elements in x."""
+    return np.where(x > 0, x - x[x > 0].mean(), x)
+
+
 class CollaborativeFiltering:
     """Class for item-item and user-user collaborative filtering."""
 
