@@ -101,7 +101,7 @@ def parse_ratings():
     """
     num_items, num_users = map(int, sys.stdin.readline().rstrip().split())
 
-    ratings = np.zeros((num_items, num_users))
+    ratings = np.zeros((num_items, num_users), dtype=int)
 
     for item in range(num_items):
         item_ratings = sys.stdin.readline().rstrip().split()
