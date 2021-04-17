@@ -89,7 +89,16 @@ class CollaborativeFiltering:
             raise AttributeError(f'Unknown CF mode {mode}')
 
 
-if __name__ == '__main__':
+def parse_ratings():
+    """
+    Parses the ratings matrix from sys.stdin input.
+
+    The following format is expected:
+    * the first row is "num_items num_users"
+    * the next num_items rows contain num_users integers specifying the ratings
+      (or X if no rating is given for an item)
+    :return: the ratings matrix, num_items, num_users
+    """
     num_items, num_users = map(int, sys.stdin.readline().rstrip().split())
 
     ratings = np.zeros((num_items, num_users))
@@ -101,7 +110,11 @@ if __name__ == '__main__':
             if rating != 'X':
                 ratings[item][user] = int(rating)
 
-    cf = CollaborativeFiltering(ratings, num_items, num_users)
+    return ratings, num_items, num_users
+
+
+if __name__ == '__main__':
+    cf = CollaborativeFiltering(*parse_ratings())
 
     num_queries = int(sys.stdin.readline().rstrip())
 
