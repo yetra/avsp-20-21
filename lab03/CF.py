@@ -39,13 +39,29 @@ class CollaborativeFiltering:
         :param item: the item whose rating will be computed
         :param user: the user whose item rating will be computed
         :param k: the number of most similar items to consider
-        :return: the item-item CF rating for
+        :return: the item-item CF rating
         """
         k_most_similar_items = self._item_sims[item, :].argsort()[::-1][:k]
         k_most_similar_item_ratings = self.ratings[k_most_similar_items, user]
         k_highest_sims = self._item_sims[item, k_most_similar_items]
 
         return ((k_highest_sims * k_most_similar_item_ratings).sum()
+                / k_highest_sims.sum())
+
+    def _user_user(self, item, user, k):
+        """
+        Computes user-user CF rating for the specified item and user.
+
+        :param item: the item whose rating will be computed
+        :param user: the user whose item rating will be computed
+        :param k: the number of most similar items to consider
+        :return: the user-user CF rating
+        """
+        k_most_similar_users = self._user_sims[:, user].argsort()[::-1][:k]
+        k_most_similar_user_ratings = self.ratings[item, k_most_similar_users]
+        k_highest_sims = self._user_sims[user, k_most_similar_users]
+
+        return ((k_highest_sims * k_most_similar_user_ratings).sum()
                 / k_highest_sims.sum())
 
 
