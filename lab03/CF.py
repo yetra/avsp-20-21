@@ -29,6 +29,9 @@ class CollaborativeFiltering:
         self.num_items = num_items
         self.num_users = num_users
 
+        self._item_sims = pearson_sim_matrix(ratings)
+        self._user_sims = pearson_sim_matrix(ratings.T)
+
 
 if __name__ == '__main__':
     num_items, num_users = map(int, sys.stdin.readline().rstrip().split())
