@@ -13,6 +13,11 @@ def subtract_nonzero_mean(x):
     return np.where(x > 0, x - x[x > 0].mean(), x)
 
 
+def compute_rating(sims, ratings):
+    """Returns the rating computed with the given similarities and ratings."""
+    return (sims * ratings).sum() / sims.sum()
+
+
 class CollaborativeFiltering:
     """Class for item-item and user-user collaborative filtering."""
 
@@ -45,8 +50,7 @@ class CollaborativeFiltering:
         k_most_similar_item_ratings = self.ratings[k_most_similar_items, user]
         k_highest_sims = self._item_sims[item, k_most_similar_items]
 
-        return ((k_highest_sims * k_most_similar_item_ratings).sum()
-                / k_highest_sims.sum())
+        return compute_rating(k_highest_sims, k_most_similar_item_ratings)
 
     def _user_user(self, item, user, k):
         """
@@ -61,8 +65,7 @@ class CollaborativeFiltering:
         k_most_similar_user_ratings = self.ratings[item, k_most_similar_users]
         k_highest_sims = self._user_sims[user, k_most_similar_users]
 
-        return ((k_highest_sims * k_most_similar_user_ratings).sum()
-                / k_highest_sims.sum())
+        return compute_rating(k_highest_sims, k_most_similar_user_ratings)
 
 
 if __name__ == '__main__':
