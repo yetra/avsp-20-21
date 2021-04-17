@@ -113,9 +113,16 @@ def parse_ratings():
     return ratings, num_items, num_users
 
 
-if __name__ == '__main__':
-    cf = CollaborativeFiltering(*parse_ratings())
+def handle_queries(cf):
+    """
+    Reads and handles queries from sys.stdin.
 
+    The following query format is expected: "I J T K"
+    * I -- the item whose rating should be predicted
+    * J -- the user whose item rating should be predicted
+    * T -- the CF mode to use (0 = item-item, 1 = user-user)
+    * K -- the number of most similar items/users to consider
+    """
     num_queries = int(sys.stdin.readline().rstrip())
 
     for _ in range(num_queries):
@@ -124,3 +131,7 @@ if __name__ == '__main__':
 
         print(Decimal(Decimal(rating).quantize(
             Decimal('.001'), rounding=ROUND_HALF_UP)))
+
+
+if __name__ == '__main__':
+    handle_queries(CollaborativeFiltering(*parse_ratings()))
