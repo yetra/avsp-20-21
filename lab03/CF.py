@@ -127,7 +127,7 @@ def handle_queries(cf):
 
     for _ in range(num_queries):
         item, user, mode, k = map(int, sys.stdin.readline().rstrip().split())
-        rating = cf.predict_rating(item, user, k, mode)
+        rating = cf.predict_rating(item - 1, user - 1, k, mode)
 
         print(Decimal(Decimal(rating).quantize(
             Decimal('.001'), rounding=ROUND_HALF_UP)))
