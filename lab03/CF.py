@@ -67,6 +67,24 @@ class CollaborativeFiltering:
 
         return compute_rating(k_highest_sims, k_most_similar_user_ratings)
 
+    def predict_rating(self, item, user, k, mode):
+        """
+        Predicts the rating of the specified item using item-item or
+        user-user CF.
+
+        :param item: the item whose rating will be predicted
+        :param user: the user whose item rating will be predicted
+        :param k: the k most similar users/items to consider
+        :param mode: 0 for item-item CF, 1 for user-user CF
+        :return: the predicted rating
+        """
+        if mode == 0:
+            return self._item_item(item, user, k)
+        elif mode == 0:
+            return self._user_user(item, user, k)
+        else:
+            raise AttributeError(f'Unknown CF mode {mode}')
+
 
 if __name__ == '__main__':
     num_items, num_users = map(int, sys.stdin.readline().rstrip().split())
