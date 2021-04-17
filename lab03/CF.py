@@ -20,6 +20,8 @@ def compute_rating(sims, ratings):
 
 class CollaborativeFiltering:
     """Class for item-item and user-user collaborative filtering."""
+    ITEM_ITEM_CF = 0
+    USER_USER_CF = 1
 
     def __init__(self, ratings, num_items, num_users):
         """
@@ -78,9 +80,9 @@ class CollaborativeFiltering:
         :param mode: 0 for item-item CF, 1 for user-user CF
         :return: the predicted rating
         """
-        if mode == 0:
+        if mode == self.ITEM_ITEM_CF:
             return self._item_item(item, user, k)
-        elif mode == 0:
+        elif mode == self.USER_USER_CF:
             return self._user_user(item, user, k)
         else:
             raise AttributeError(f'Unknown CF mode {mode}')
