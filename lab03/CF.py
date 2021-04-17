@@ -3,9 +3,9 @@ import sys
 import numpy as np
 
 
-def pearson_sim(x, y):
-    """Calculates the Pearson similarity between two ratings vectors."""
-    return np.corrcoef(subtract_nonzero_mean(x), subtract_nonzero_mean(y))[0][1]
+def pearson_sim_matrix(x):
+    """Calculates the Pearson similarity matrix for x."""
+    return np.corrcoef(np.apply_along_axis(subtract_nonzero_mean, 1, x))
 
 
 def subtract_nonzero_mean(x):
