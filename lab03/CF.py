@@ -32,6 +32,22 @@ class CollaborativeFiltering:
         self._item_sims = pearson_sim_matrix(ratings)
         self._user_sims = pearson_sim_matrix(ratings.T)
 
+    def _item_item(self, item, user, k):
+        """
+        Computes item-item CF rating for the specified item and user.
+
+        :param item: the item whose rating will be computed
+        :param user: the user whose item rating will be computed
+        :param k: the number of most similar items to consider
+        :return: the item-item CF rating for
+        """
+        k_most_similar_items = self._item_sims[item, :].argsort()[::-1][:k]
+        k_most_similar_item_ratings = self.ratings[k_most_similar_items, user]
+        k_highest_sims = self._item_sims[item, k_most_similar_items]
+
+        return ((k_highest_sims * k_most_similar_item_ratings).sum()
+                / k_highest_sims.sum())
+
 
 if __name__ == '__main__':
     num_items, num_users = map(int, sys.stdin.readline().rstrip().split())
