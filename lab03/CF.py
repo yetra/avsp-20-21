@@ -49,7 +49,11 @@ class CollaborativeFiltering:
         :param k: the number of most similar items to consider
         :return: the item-item CF rating
         """
-        k_most_similar_items = self._item_sims[item, :].argsort()[::-1][1:k+1]
+        similar_items = self._item_sims[item, :].argsort()[::-1]
+        has_sim_gt_0 = self._item_sims[item, similar_items] > 0
+        has_user_rating = self.ratings[similar_items, user] != 0
+        k_most_similar_items = similar_items[has_sim_gt_0 & has_user_rating][:k]
+
         k_most_similar_item_ratings = self.ratings[k_most_similar_items, user]
         k_highest_sims = self._item_sims[item, k_most_similar_items]
 
@@ -64,7 +68,11 @@ class CollaborativeFiltering:
         :param k: the number of most similar items to consider
         :return: the user-user CF rating
         """
-        k_most_similar_users = self._user_sims[:, user].argsort()[::-1][1:k+1]
+        similar_users = self._user_sims[user, :].argsort()[::-1]
+        has_sim_gt_0 = self._user_sims[user, similar_users] > 0
+        has_item_rating = self.ratings[item, similar_users] != 0
+        k_most_similar_users = similar_users[has_sim_gt_0 & has_item_rating][:k]
+
         k_most_similar_user_ratings = self.ratings[item, k_most_similar_users]
         k_highest_sims = self._user_sims[user, k_most_similar_users]
 
