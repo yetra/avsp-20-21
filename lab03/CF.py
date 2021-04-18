@@ -19,6 +19,25 @@ def compute_rating(sims, ratings):
     return (sims * ratings).sum() / sims.sum()
 
 
+def k_most_similar(idx, o_idx, k, sims, ratings):
+    """Returns the k most similar indices (items or users)."""
+    similar_idxs = sims[idx, :].argsort()[::-1]
+    has_sim_gt_0 = sims[idx, similar_idxs] > 0
+    has_rating = ratings[similar_idxs, o_idx] != 0
+    k_most_similar_idxs = similar_idxs[has_sim_gt_0 & has_rating][:k]
+
+    return k_most_similar_idxs
+
+
+def predict_rating(idx, o_idx, k, sims, ratings):
+    """Predicts the rating of a given item/user."""
+    k_most_similar_idxs = k_most_similar(idx, o_idx, k, sims, ratings)
+    k_most_similar_ratings = ratings[k_most_similar_idxs, o_idx]
+    k_highest_sims = sims[idx, k_most_similar_idxs]
+
+    return compute_rating(k_highest_sims, k_most_similar_ratings)
+
+
 class CollaborativeFiltering:
     """Class for item-item and user-user collaborative filtering."""
     ITEM_ITEM_CF = 0
@@ -41,44 +60,6 @@ class CollaborativeFiltering:
         self._item_sims = pearson_sim_matrix(ratings)
         self._user_sims = pearson_sim_matrix(self.ratings_T)
 
-    def _item_item(self, item, user, k):
-        """
-        Computes item-item CF rating for the specified item and user.
-
-        :param item: the item whose rating will be computed
-        :param user: the user whose item rating will be computed
-        :param k: the number of most similar items to consider
-        :return: the item-item CF rating
-        """
-        similar_items = self._item_sims[item, :].argsort()[::-1]
-        has_sim_gt_0 = self._item_sims[item, similar_items] > 0
-        has_user_rating = self.ratings[similar_items, user] != 0
-        k_most_similar_items = similar_items[has_sim_gt_0 & has_user_rating][:k]
-
-        k_most_similar_item_ratings = self.ratings[k_most_similar_items, user]
-        k_highest_sims = self._item_sims[item, k_most_similar_items]
-
-        return compute_rating(k_highest_sims, k_most_similar_item_ratings)
-
-    def _user_user(self, item, user, k):
-        """
-        Computes user-user CF rating for the specified item and user.
-
-        :param item: the item whose rating will be computed
-        :param user: the user whose item rating will be computed
-        :param k: the number of most similar items to consider
-        :return: the user-user CF rating
-        """
-        similar_users = self._user_sims[user, :].argsort()[::-1]
-        has_sim_gt_0 = self._user_sims[user, similar_users] > 0
-        has_item_rating = self.ratings[item, similar_users] != 0
-        k_most_similar_users = similar_users[has_sim_gt_0 & has_item_rating][:k]
-
-        k_most_similar_user_ratings = self.ratings[item, k_most_similar_users]
-        k_highest_sims = self._user_sims[user, k_most_similar_users]
-
-        return compute_rating(k_highest_sims, k_most_similar_user_ratings)
-
     def predict_rating(self, item, user, k, mode):
         """
         Predicts the rating of the specified item using item-item or
@@ -91,9 +72,9 @@ class CollaborativeFiltering:
         :return: the predicted rating
         """
         if mode == self.ITEM_ITEM_CF:
-            return self._item_item(item, user, k)
+            return predict_rating(item, user, k, self._item_sims, self.ratings)
         elif mode == self.USER_USER_CF:
-            return self._user_user(item, user, k)
+            return predict_rating(user, item, k, self._user_sims, self.ratings_T)
         else:
             raise AttributeError(f'Unknown CF mode {mode}')
 
