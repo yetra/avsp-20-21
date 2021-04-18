@@ -33,12 +33,13 @@ class CollaborativeFiltering:
         :param num_users: the total number of users
         """
         self.ratings = ratings
+        self.ratings_T = ratings.T
 
         self.num_items = num_items
         self.num_users = num_users
 
         self._item_sims = pearson_sim_matrix(ratings)
-        self._user_sims = pearson_sim_matrix(ratings.T)
+        self._user_sims = pearson_sim_matrix(self.ratings_T)
 
     def _item_item(self, item, user, k):
         """
