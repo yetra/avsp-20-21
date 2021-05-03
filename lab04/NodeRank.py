@@ -78,3 +78,4 @@ def handle_queries(num_nodes, beta, M):
 
 if __name__ == '__main__':
     num_nodes, beta = map(int, sys.stdin.readline().rstrip().split())
+    handle_queries(num_nodes, beta, parse_M(num_nodes))
