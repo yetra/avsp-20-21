@@ -1,5 +1,36 @@
 import sys
-from collections import defaultdict
+from collections import defaultdict, deque
+
+
+def closest_black_node(node, adj_matrix, black_nodes):
+    """
+    Finds the closest black node of a given node using BFS.
+
+    :param node: the node whose closest black node needs to be found
+    :param adj_matrix: the adjacency matrix in dict form
+    :param black_nodes: a set of black node indices
+    :return: the index of the closest black node and the corresponding distance
+    """
+    distance = 0
+
+    visited = set()
+    queue = deque()
+    queue.append(node)
+
+    while queue:
+        curr_node = queue.pop()
+
+        if curr_node in black_nodes:
+            return curr_node, distance
+
+        next_nodes = adj_matrix.get(node, [])
+
+        for next_node in next_nodes:
+            if next_node not in visited:
+                visited.add(next_node)
+                queue.append(next_node)
+
+        distance += 1
 
 
 def parse_node_colors(num_nodes):
