@@ -56,7 +56,7 @@ def parse_node_colors(num_nodes):
 
 def parse_edges(num_edges):
     """
-    Parses graph edges from sys.stdin.
+    Parses graph edges from sys.stdin into an adjacency matrix.
 
     The function expects num_edges line where each line contains two node
     indices separated by a whitespace.
@@ -71,5 +71,9 @@ def parse_edges(num_edges):
 
         adj_matrix[node_1].append(node_2)
         adj_matrix[node_2].append(node_1)
+
+    # sort the lists of adjacent nodes
+    for adj_list in adj_matrix.values():
+        adj_list.sort()
 
     return adj_matrix
