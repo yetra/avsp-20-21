@@ -1,15 +1,16 @@
 import sys
-from scipy.sparse import csr_matrix
+
+from scipy.sparse import csc_matrix
 
 
-def parse_graph(num_nodes):
+def parse_M(num_nodes):
     """
-    Parses input from sys.stdin into a sparse adjacency matrix.
+    Constructs the M matrix used in NodeRank from sys.stdin input.
 
     The function expects num_nodes lines such that line i contains the indices
     of nodes adjacent to i.
 
-    :return: the parsed adjacency matrix in scipy.sparse.crs_matrix form
+    :return: the parsed M matrix in scipy.sparse.crc_matrix form
     """
     indptr = [0]
     indices = []
@@ -19,10 +20,10 @@ def parse_graph(num_nodes):
         adj_nodes = list(map(int, sys.stdin.readline().rstrip().split()))
 
         indices += adj_nodes
-        data += [1] * len(adj_nodes)
+        data += [1. / len(adj_nodes)] * len(adj_nodes)
         indptr.append(len(indices))
 
-    return csr_matrix((data, indices, indptr), dtype=int)
+    return csc_matrix((data, indices, indptr))
 
 
 if __name__ == '__main__':
