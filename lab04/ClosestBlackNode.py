@@ -32,6 +32,8 @@ def closest_black_node(node, adj_matrix, black_nodes):
 
         distance += 1
 
+    return -1, -1
+
 
 def parse_node_colors(num_nodes):
     """
