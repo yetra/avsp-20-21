@@ -1,6 +1,33 @@
 import sys
 
+import numpy as np
 from scipy.sparse import csc_matrix
+
+
+def node_rank(num_nodes, beta, M, max_iter, eps=1e-5):
+    """
+    Performs the NodeRank algorithm.
+
+    :param num_nodes: the number of nodes in the graph
+    :param beta: the probability of following a graph link
+    :param M: the flow adjacency matrix (column-based)
+    :param max_iter: the maximum number of algorithm iterations
+    :param eps: stop the algorithm if difference between iteration results
+                becomes <= eps
+    :return: the rank vector
+    """
+    r = np.fill(num_nodes, 1. / num_nodes)
+    teleport_probs = np.fill(num_nodes, (1 - beta) / num_nodes)
+
+    for _ in range(max_iter):
+        r_next = beta * M.multiply(r) + teleport_probs
+
+        if np.abs(r_next - r) <= eps:
+            return r_next
+
+        r = r_next
+
+    return r
 
 
 def parse_M(num_nodes):
