@@ -1,4 +1,5 @@
 import sys
+from decimal import Decimal, ROUND_HALF_UP
 
 import numpy as np
 from scipy.sparse import csc_matrix
@@ -51,6 +52,28 @@ def parse_M(num_nodes):
         indptr.append(len(indices))
 
     return csc_matrix((data, indices, indptr))
+
+
+def handle_queries(num_nodes, beta, M):
+    """
+    Reads queries from sys.stdin and prints the required results.
+
+    Each query consists of two integers separated by a whitespace:
+    * node - the node whose rank should be calculated using NodeRank
+    * max_iter - the maximum number of NodeRank iterations
+
+    :param num_nodes: the number of nodes in the graph
+    :param beta: the probability of following a graph link
+    :param M: the flow adjacency matrix (column-based)
+    """
+    num_queries = int(sys.stdin.readline().rstrip())
+
+    for _ in range(num_queries):
+        node, max_iter = map(int, sys.stdin.readline().rstrip().split())
+        r = node_rank(num_nodes, beta, M, max_iter)
+
+        print(Decimal(Decimal(r[node]).quantize(
+            Decimal('.0000000001'), rounding=ROUND_HALF_UP)))
 
 
 if __name__ == '__main__':
