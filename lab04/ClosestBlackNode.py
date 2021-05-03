@@ -77,3 +77,14 @@ def parse_edges(num_edges):
         adj_list.sort()
 
     return adj_matrix
+
+
+if __name__ == '__main__':
+    num_nodes, num_edges = map(int, sys.stdin.readline().rstrip().split())
+
+    black_nodes = parse_node_colors(num_nodes)
+    adj_matrix = parse_edges(num_edges)
+
+    for node in range(num_nodes):
+        closest, distance = closest_black_node(node, adj_matrix, black_nodes)
+        print(f'{closest} {distance}')
