@@ -73,7 +73,7 @@ def parse_M(num_nodes):
     return csc_matrix((data, indices, indptr))
 
 
-def handle_queries(num_nodes, beta, M):
+def handle_queries(node_rank):
     """
     Reads queries from sys.stdin and prints the required results.
 
@@ -81,25 +81,21 @@ def handle_queries(num_nodes, beta, M):
     * node - the node whose rank should be calculated using NodeRank
     * max_iter - the maximum number of NodeRank iterations
 
-    :param num_nodes: the number of nodes in the graph
-    :param beta: the probability of following a graph link
-    :param M: the flow adjacency matrix (column-based)
+    :param node_rank: the NodeRank instance to use
     """
     num_queries = int(sys.stdin.readline().rstrip())
-    r_stored = {}
 
     for _ in range(num_queries):
         node, max_iter = map(int, sys.stdin.readline().rstrip().split())
+        r = node_rank.run(max_iter)
 
-        if max_iter not in r_stored:
-            r_stored[max_iter] = node_rank(num_nodes, beta, M, max_iter)
-
-        print(Decimal(Decimal(r_stored[max_iter][node]).quantize(
+        print(Decimal(Decimal(r[node]).quantize(
             Decimal('.0000000001'), rounding=ROUND_HALF_UP)))
 
 
 if __name__ == '__main__':
     line_parts = sys.stdin.readline().rstrip().split()
     num_nodes, beta = int(line_parts[0]), float(line_parts[1])
+    node_rank = NodeRank(num_nodes, beta, parse_M(num_nodes))
 
-    handle_queries(num_nodes, beta, parse_M(num_nodes))
+    handle_queries(node_rank)
