@@ -67,10 +67,11 @@ def handle_queries(num_nodes, beta, M):
     :param M: the flow adjacency matrix (column-based)
     """
     num_queries = int(sys.stdin.readline().rstrip())
+    rs = {}
 
     for _ in range(num_queries):
         node, max_iter = map(int, sys.stdin.readline().rstrip().split())
-        r = node_rank(num_nodes, beta, M, max_iter)
+        r = rs.setdefault(max_iter, node_rank(num_nodes, beta, M, max_iter))
 
         print(Decimal(Decimal(r[node]).quantize(
             Decimal('.0000000001'), rounding=ROUND_HALF_UP)))
