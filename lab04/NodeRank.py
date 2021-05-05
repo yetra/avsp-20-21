@@ -17,8 +17,8 @@ def node_rank(num_nodes, beta, M, max_iter, eps=1e-15):
                 becomes <= eps
     :return: the rank vector
     """
-    r = np.fill(num_nodes, 1. / num_nodes)
-    teleport_probs = np.fill(num_nodes, (1 - beta) / num_nodes)
+    r = np.array([1. / num_nodes] * num_nodes)
+    teleport_probs = np.array([(1 - beta) / num_nodes] * num_nodes)
 
     for _ in range(max_iter):
         r_next = beta * M.multiply(r) + teleport_probs
