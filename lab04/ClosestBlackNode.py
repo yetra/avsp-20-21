@@ -18,17 +18,22 @@ def closest_black_node(node, adj_matrix, black_nodes):
     queue.append(node)
 
     while queue:
-        curr_node = queue.popleft()
+        level_size = len(queue)
 
-        if curr_node in black_nodes:
-            return curr_node, distance
+        while level_size > 0:
+            curr_node = queue.popleft()
 
-        next_nodes = adj_matrix.get(curr_node, [])
+            if curr_node in black_nodes:
+                return curr_node, distance
 
-        for next_node in next_nodes:
-            if next_node not in visited:
-                visited.add(next_node)
-                queue.append(next_node)
+            next_nodes = adj_matrix.get(curr_node, [])
+
+            for next_node in next_nodes:
+                if next_node not in visited:
+                    visited.add(next_node)
+                    queue.append(next_node)
+
+            level_size -= 1
 
         distance += 1
 
