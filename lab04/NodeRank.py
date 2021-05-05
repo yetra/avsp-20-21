@@ -72,7 +72,7 @@ def parse_M(num_nodes):
         data += [1. / len(adj_nodes)] * len(adj_nodes)
         indptr.append(len(indices))
 
-    return csc_matrix((data, indices, indptr))
+    return csc_matrix((data, indices, indptr), shape=(num_nodes, num_nodes))
 
 
 def handle_queries(node_rank):
