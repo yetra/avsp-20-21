@@ -77,5 +77,7 @@ def handle_queries(num_nodes, beta, M):
 
 
 if __name__ == '__main__':
-    num_nodes, beta = map(int, sys.stdin.readline().rstrip().split())
+    line_parts = sys.stdin.readline().rstrip().split()
+    num_nodes, beta = int(line_parts[0]), float(line_parts[1])
+
     handle_queries(num_nodes, beta, parse_M(num_nodes))
