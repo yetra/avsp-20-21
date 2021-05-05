@@ -30,6 +30,8 @@ class NodeRank:
         """
         Runs the NodeRank algorithm.
 
+        Precomputed rank vectors are stored in a list for faster execution.
+
         :param max_iter: the maximum number of algorithm iterations
         :return: the rank vector
         """
