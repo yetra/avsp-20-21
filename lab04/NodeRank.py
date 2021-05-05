@@ -1,5 +1,4 @@
 import sys
-import time
 from decimal import Decimal, ROUND_HALF_UP
 
 import numpy as np
@@ -99,6 +98,4 @@ if __name__ == '__main__':
     num_nodes, beta = int(line_parts[0]), float(line_parts[1])
     node_rank = NodeRank(num_nodes, beta, parse_M(num_nodes))
 
-    s = time.time()
     handle_queries(node_rank)
-    print(f'Time: {time.time() - s}')
