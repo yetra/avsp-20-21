@@ -18,7 +18,7 @@ def closest_black_node(node, adj_matrix, black_nodes):
     queue.append(node)
 
     while queue:
-        curr_node = queue.pop()
+        curr_node = queue.popleft()
 
         if curr_node in black_nodes:
             return curr_node, distance
