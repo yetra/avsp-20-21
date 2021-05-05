@@ -5,7 +5,7 @@ import numpy as np
 from scipy.sparse import csc_matrix
 
 
-def node_rank(num_nodes, beta, M, max_iter, eps=1e-5):
+def node_rank(num_nodes, beta, M, max_iter, eps=1e-15):
     """
     Performs the NodeRank algorithm.
 
