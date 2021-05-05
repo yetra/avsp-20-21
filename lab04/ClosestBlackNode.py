@@ -6,6 +6,9 @@ def closest_black_node(node, adj_matrix, black_nodes):
     """
     Finds the closest black node of a given node using BFS.
 
+    If multiple such black nodes exist, the one with the smallest index
+    is considered as the closest.
+
     :param node: the node whose closest black node needs to be found
     :param adj_matrix: the adjacency matrix in dict form
     :param black_nodes: a set of black node indices
@@ -19,12 +22,13 @@ def closest_black_node(node, adj_matrix, black_nodes):
 
     while queue:
         level_size = len(queue)
+        min_black_index = len(adj_matrix)
 
         while level_size > 0:
             curr_node = queue.popleft()
 
-            if curr_node in black_nodes:
-                return curr_node, distance
+            if curr_node in black_nodes and curr_node < min_black_index:
+                min_black_index = curr_node
 
             next_nodes = adj_matrix.get(curr_node, [])
 
@@ -34,6 +38,9 @@ def closest_black_node(node, adj_matrix, black_nodes):
                     queue.append(next_node)
 
             level_size -= 1
+
+        if min_black_index != len(adj_matrix):
+            return min_black_index, distance
 
         distance += 1
 
@@ -78,10 +85,6 @@ def parse_edges(num_edges):
 
         adj_matrix[node_1].append(node_2)
         adj_matrix[node_2].append(node_1)
-
-    # sort the lists of adjacent nodes
-    for adj_list in adj_matrix.values():
-        adj_list.sort()
 
     return adj_matrix
 
