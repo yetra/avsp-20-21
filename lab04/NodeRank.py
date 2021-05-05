@@ -23,7 +23,7 @@ def node_rank(num_nodes, beta, M, max_iter, eps=1e-15):
     for _ in range(max_iter):
         r_next = beta * (M @ r) + teleport_probs
 
-        if np.abs(r_next - r) <= eps:
+        if np.abs(r_next - r).sum() <= eps:
             return r_next
 
         r = r_next
