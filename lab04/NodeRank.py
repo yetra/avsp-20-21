@@ -1,4 +1,5 @@
 import sys
+import time
 from decimal import Decimal, ROUND_HALF_UP
 
 import numpy as np
@@ -33,12 +34,12 @@ class NodeRank:
         :param max_iter: the maximum number of algorithm iterations
         :return: the rank vector
         """
-        if max_iter <= len(self.r_stored):
+        if max_iter <= len(self.r_stored) - 1:
             return self.r_stored[max_iter]
 
         r = self.r_stored[-1]
 
-        for i in range(len(self.r_stored), max_iter):
+        for _ in range(len(self.r_stored) - 1, max_iter):
             r_next = beta * (self.M @ r) + self.teleport_probs
             self.r_stored.append(r_next)
 
@@ -98,4 +99,6 @@ if __name__ == '__main__':
     num_nodes, beta = int(line_parts[0]), float(line_parts[1])
     node_rank = NodeRank(num_nodes, beta, parse_M(num_nodes))
 
+    s = time.time()
     handle_queries(node_rank)
+    print(f'Time: {time.time() - s}')
