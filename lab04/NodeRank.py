@@ -5,30 +5,43 @@ import numpy as np
 from scipy.sparse import csc_matrix
 
 
-def node_rank(num_nodes, beta, M, max_iter, eps=1e-15):
-    """
-    Performs the NodeRank algorithm.
+class NodeRank:
+    """The NodeRank algorithm class."""
 
-    :param num_nodes: the number of nodes in the graph
-    :param beta: the probability of following a graph link
-    :param M: the flow adjacency matrix (column-based)
-    :param max_iter: the maximum number of algorithm iterations
-    :param eps: stop the algorithm if difference between iteration results
-                becomes <= eps
-    :return: the rank vector
-    """
-    r = np.array([1. / num_nodes] * num_nodes)
-    teleport_probs = np.array([(1 - beta) / num_nodes] * num_nodes)
+    def __init__(self, num_nodes, beta, M, eps=1e-15):
+        """
+        Initializes the NodeRank class.
 
-    for _ in range(max_iter):
-        r_next = beta * (M @ r) + teleport_probs
+        :param num_nodes: the number of nodes in the graph
+        :param beta: the probability of following a graph link
+        :param M: the flow adjacency matrix (column-based)
+        :param eps: stop the algorithm if difference between iteration results
+                    becomes <= eps
+        """
+        self.num_nodes = num_nodes
+        self.beta = beta
+        self.M = M
+        self.eps = eps
 
-        if np.abs(r_next - r).sum() <= eps:
-            return r_next
+    def run(self, max_iter):
+        """
+        Runs the NodeRank algorithm.
 
-        r = r_next
+        :param max_iter: the maximum number of algorithm iterations
+        :return: the rank vector
+        """
+        r = np.array([1. / num_nodes] * num_nodes)
+        teleport_probs = np.array([(1 - beta) / num_nodes] * num_nodes)
 
-    return r
+        for _ in range(max_iter):
+            r_next = beta * (self.M @ r) + teleport_probs
+
+            if np.abs(r_next - r).sum() <= self.eps:
+                return r_next
+
+            r = r_next
+
+        return r
 
 
 def parse_M(num_nodes):
