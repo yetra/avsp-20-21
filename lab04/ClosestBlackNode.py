@@ -23,7 +23,7 @@ def closest_black_node(node, adj_matrix, black_nodes):
         if curr_node in black_nodes:
             return curr_node, distance
 
-        next_nodes = adj_matrix.get(node, [])
+        next_nodes = adj_matrix.get(curr_node, [])
 
         for next_node in next_nodes:
             if next_node not in visited:
