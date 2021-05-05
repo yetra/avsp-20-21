@@ -23,6 +23,9 @@ class NodeRank:
         self.M = M
         self.eps = eps
 
+        self.r_stored = [np.array([1. / num_nodes] * num_nodes)]
+        self.teleport_probs = np.array([(1 - beta) / num_nodes] * num_nodes)
+
     def run(self, max_iter):
         """
         Runs the NodeRank algorithm.
@@ -30,11 +33,14 @@ class NodeRank:
         :param max_iter: the maximum number of algorithm iterations
         :return: the rank vector
         """
-        r = np.array([1. / num_nodes] * num_nodes)
-        teleport_probs = np.array([(1 - beta) / num_nodes] * num_nodes)
+        if max_iter <= len(self.r_stored):
+            return self.r_stored[max_iter]
 
-        for _ in range(max_iter):
-            r_next = beta * (self.M @ r) + teleport_probs
+        r = self.r_stored[-1]
+
+        for i in range(len(self.r_stored), max_iter):
+            r_next = beta * (self.M @ r) + self.teleport_probs
+            self.r_stored.append(r_next)
 
             if np.abs(r_next - r).sum() <= self.eps:
                 return r_next
