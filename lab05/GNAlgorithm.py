@@ -52,3 +52,22 @@ def parse_properties():
         properties[node] = properties_vector
 
     return properties
+
+
+def add_weights(edges, properties):
+    """
+    Adds weights to the given edges dict using node properties.
+
+    :param edges: dict of graph edges
+    :param properties: dict of node property vectors
+    :return: updated edges dict
+    """
+    max_similarity = len(properties.values()[0])
+
+    for node_1, node_2 in edges:
+        similarity = np.sum(properties[node_1] == properties[node_2])
+        weight = max_similarity - similarity + 1
+
+        edges[node_1, node_2] = weight
+
+    return edges
