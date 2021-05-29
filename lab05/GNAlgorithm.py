@@ -62,9 +62,8 @@ def add_weights(edges, properties):
     :param properties: dict of node property vectors
     :return: updated edges dict
     """
-    max_similarity = len(properties.values()[0])
-
     for node_1, node_2 in edges:
+        max_similarity = len(properties[node_1])
         similarity = np.sum(properties[node_1] == properties[node_2])
         weight = max_similarity - similarity + 1
 
