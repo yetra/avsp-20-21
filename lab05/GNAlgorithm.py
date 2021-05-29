@@ -1,6 +1,8 @@
 import sys
 from collections import defaultdict
 
+import numpy as np
+
 
 def parse_edges():
     """
@@ -26,3 +28,27 @@ def parse_edges():
         adj_matrix[node_2].append(node_1)
 
     return edges, adj_matrix
+
+
+def parse_properties():
+    """
+    Parses node properties from sys.stdin.
+
+    The function expects lines of integers separated by a whitespace.
+    The first integer is the index of the node and the remaining integers
+    are values of properties.
+
+    :return: a dict of property vectors (numpy.ndarray)
+    """
+    properties = {}
+
+    while True:
+        line = sys.stdin.readline().rstrip()
+        if not line:
+            break
+
+        line_parts = list(map(int, line.split()))
+        node, properties_vector = line_parts[0], np.array(line_parts[1:])
+        properties[node] = properties_vector
+
+    return properties
