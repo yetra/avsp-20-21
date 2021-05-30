@@ -167,17 +167,17 @@ def girvan_newmann(graph):
             graph.remove_edge(edge)
 
         if graph.edges:
-            curr_communities = tuple(graph.communities())
-            curr_modularity = modularity(curr_communities, graph)
+            communities = tuple(graph.communities())
+            modularity = calculate_modularity(communities, graph)
 
-            if best_modularity is None or curr_modularity > best_modularity:
-                best_communities = curr_communities
-                best_modularity = curr_modularity
+            if best_modularity is None or modularity > best_modularity:
+                best_communities = communities
+                best_modularity = modularity
 
     return best_communities, best_modularity
 
 
-def modularity(communities, graph):
+def calculate_modularity(communities, graph):
     """
     Computes the modularity for the given communities.
 
