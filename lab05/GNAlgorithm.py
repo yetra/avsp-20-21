@@ -308,3 +308,7 @@ def update_centralities(paths, centralities):
     for path in paths:
         for i, j in zip(path[:-1], path[1:]):
             centralities[i, j] += centrality_coeff
+
+
+if __name__ == '__main__':
+    girvan_newmann(Graph.from_stdin())
