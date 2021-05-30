@@ -152,6 +152,7 @@ def girvan_newmann(graph):
     Implements the Girvan-Newmann algorithm.
 
     :param graph: the Graph instance
+    :return: the best found communities based on modularity
     """
     best_modularity = None
     best_communities = None
@@ -185,7 +186,7 @@ def girvan_newmann(graph):
     sorted_best_communities.sort(key=lambda c: (len(c), c[0]))
     print(' '.join(map(lambda c: '-'.join(map(str, c)), best_communities)))
 
-    return best_communities, best_modularity
+    return best_communities
 
 
 def calculate_modularity(communities, graph):
