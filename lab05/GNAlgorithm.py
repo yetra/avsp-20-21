@@ -31,6 +31,28 @@ class UnorderedTupleKeyDict(MutableMapping):
         return len(self._map)
 
 
+def calculate_betweenness(edges, adj_matrix):
+    """
+    Calculates edge betweenness for the given graph.
+
+    :param edges: dict of edge weights
+    :param adj_matrix: adjacency matrix
+    :return: the edge betweenness dict
+    """
+    successors = floyd_warshall(edges, adj_matrix)
+    centralities = dict.fromkeys(edges, 0.0)
+
+    for i in adj_matrix.keys():
+        for j in adj_matrix.keys():
+            paths = list(shortest_paths(successors, i, j))
+            update_centralities(paths, centralities)
+
+    for key, centrality in centralities.items():
+        centralities[key] = centrality / 2.0
+
+    return centralities
+
+
 def floyd_warshall(edges, adj_matrix):
     """
     Implements the Floyd-Warshall algorithm for weighted undirected graphs.
