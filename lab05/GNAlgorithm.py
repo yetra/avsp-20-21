@@ -4,6 +4,89 @@ from collections import defaultdict, MutableMapping
 import numpy as np
 
 
+class Graph:
+    """Models a graph."""
+
+    def __init__(self, edges, adj_matrix):
+        """
+        Initializes a Graph instance.
+
+        :param edges: a dict of graph edges where the values represent weights
+        :param adj_matrix: the adjacency matrix
+        """
+        self.edges = edges
+        self.nodes = adj_matrix.keys()
+        self.adj_matrix = adj_matrix
+
+    def adjacent(self, node):
+        """Returns nodes adjacent to the given node."""
+        return self.adj_matrix[node]
+
+    @staticmethod
+    def from_stdin():
+        """Creates a Graph by reading edges and properties from sys.stdin."""
+        edges, adj_matrix = Graph._parse_edges()
+        properties = Graph._parse_properties()
+
+        # update weights using node properties
+        for node_1, node_2 in edges:
+            max_similarity = len(properties[node_1])
+            similarity = np.sum(properties[node_1] == properties[node_2])
+            edges[node_1, node_2] = max_similarity - similarity + 1
+
+        return Graph(edges, adj_matrix)
+
+    @staticmethod
+    def _parse_edges():
+        """
+        Parses graph edges from sys.stdin.
+
+        The function expects lines of two integers separated by a whitespace.
+        The integers are indices of the nodes that the edge connects.
+
+        :return: the parsed edges dict and adjacency matrix
+        """
+        edges = UnorderedTupleKeyDict()
+        adj_matrix = defaultdict(list)
+
+        while True:
+            line = sys.stdin.readline().rstrip()
+            if not line:
+                break
+
+            node_1, node_2 = map(int, line.split())
+
+            edges[node_1, node_2] = 1
+            adj_matrix[node_1].append(node_2)
+            adj_matrix[node_2].append(node_1)
+
+        return edges, adj_matrix
+
+    @staticmethod
+    def _parse_properties():
+        """
+        Parses node properties from sys.stdin.
+
+        The function expects lines of integers separated by a whitespace.
+        The first integer is the index of the node and the remaining integers
+        are values of properties.
+
+        :return: a dict of property vectors (numpy.ndarray)
+        """
+        properties = {}
+
+        while True:
+            line = sys.stdin.readline().rstrip()
+            if not line:
+                break
+
+            line_parts = list(map(int, line.split()))
+            node, properties_vector = line_parts[0], np.array(line_parts[1:])
+            properties[node] = properties_vector
+
+        return properties
+
+
 class UnorderedTupleKeyDict(MutableMapping):
     """
     A dict of "unordered" tuple keys i.e. using the key (a, b) or (b, a)
@@ -226,68 +309,3 @@ def update_centralities(paths, centralities):
     for path in paths:
         for i, j in zip(path[:-1], path[1:]):
             centralities[i, j] += centrality_coeff
-
-
-def parse_edges():
-    """
-    Parses graph edges from sys.stdin.
-
-    The function expects lines of two integers separated by a whitespace.
-    The integers are indices of the nodes that the edge connects.
-
-    :return: the parsed edges dict and adjacency matrix
-    """
-    edges = UnorderedTupleKeyDict()
-    adj_matrix = defaultdict(list)
-
-    while True:
-        line = sys.stdin.readline().rstrip()
-        if not line:
-            break
-
-        node_1, node_2 = map(int, line.split())
-
-        edges[node_1, node_2] = 1
-        adj_matrix[node_1].append(node_2)
-        adj_matrix[node_2].append(node_1)
-
-    return edges, adj_matrix
-
-
-def parse_properties():
-    """
-    Parses node properties from sys.stdin.
-
-    The function expects lines of integers separated by a whitespace.
-    The first integer is the index of the node and the remaining integers
-    are values of properties.
-
-    :return: a dict of property vectors (numpy.ndarray)
-    """
-    properties = {}
-
-    while True:
-        line = sys.stdin.readline().rstrip()
-        if not line:
-            break
-
-        line_parts = list(map(int, line.split()))
-        node, properties_vector = line_parts[0], np.array(line_parts[1:])
-        properties[node] = properties_vector
-
-    return properties
-
-
-def update_weights(edges, properties):
-    """
-    Updates edge weights using node properties.
-
-    :param edges: dict of graph edges
-    :param properties: dict of node property vectors
-    """
-    for node_1, node_2 in edges:
-        max_similarity = len(properties[node_1])
-        similarity = np.sum(properties[node_1] == properties[node_2])
-        weight = max_similarity - similarity + 1
-
-        edges[node_1, node_2] = weight
