@@ -4,6 +4,43 @@ from collections import defaultdict
 import numpy as np
 
 
+def floyd_warshall(edges, adj_matrix):
+    """
+    Implements the Floyd-Warshall algorithm for weighted undirected graphs.
+    This implementation keeps track of all shortest paths between node pairs.
+
+    :param edges: dict of edge weights
+    :param adj_matrix: adjacency matrix
+    :return: a dict of node successors for path reconstruction
+    """
+    costs = defaultdict(lambda: np.inf)
+    successors = defaultdict(set)
+
+    for (i, j), weight in edges.items():
+        costs[i, j] = costs[j, i] = weight
+        successors[i, j].add(j)
+        successors[j, i].add(i)
+
+    for node in adj_matrix.keys():
+        costs[node, node] = 0
+
+    for k in adj_matrix.keys():
+        for i in adj_matrix.keys():
+            cost_ik = costs[i, k]
+            for j in adj_matrix.keys():
+                cost_ik_kj = cost_ik + costs[k, j]
+                cost_ij = costs[i, j]
+
+                if cost_ij > cost_ik_kj:
+                    costs[i, j] = cost_ik_kj
+                    successors[i, j] = set(successors[i, k])
+                elif (cost_ij == cost_ik_kj and cost_ij != np.inf
+                      and k != j and k != i):
+                    successors[i, j].update(successors[i, k])
+
+    return successors
+
+
 def parse_edges():
     """
     Parses graph edges from sys.stdin.
