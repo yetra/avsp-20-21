@@ -29,6 +29,32 @@ class Graph:
         self.adj_matrix[node_1].remove(node_2)
         self.adj_matrix[node_2].remove(node_1)
 
+    def communities(self):
+        """Returns a generator of graph communities (connected node groups)."""
+        def _bfs(graph, source):
+            """An implementation of BFS for finding connected nodes."""
+            _seen = set()
+            _queue = {source}
+
+            while _queue:
+                _current_nodes = _queue
+                _queue = set()
+
+                for _node in _current_nodes:
+                    if _node not in _seen:
+                        _seen.add(_node)
+                        _queue.update(graph.adjacent(_node))
+
+            return _seen
+
+        seen = set()
+
+        for node in self.nodes:
+            if node not in seen:
+                seen_from_node = _bfs(self, node)
+                seen.update(seen_from_node)
+                yield seen_from_node
+
     @staticmethod
     def from_stdin():
         """Creates a Graph by reading edges and properties from sys.stdin."""
@@ -141,7 +167,7 @@ def girvan_newmann(graph):
             graph.remove_edge(edge)
 
         if graph.edges:
-            curr_communities = tuple(communities(graph))
+            curr_communities = tuple(graph.communities())
             curr_modularity = modularity(curr_communities, graph)
 
             if best_modularity is None or curr_modularity > best_modularity:
@@ -179,39 +205,6 @@ def modularity(communities, graph):
                       * _connected(i, j, communities))
 
     return total / total_weight_doubled
-
-
-def communities(graph):
-    """
-    Finds communities (groups of connected nodes) in the given graph.
-
-    :param graph: the Graph instance
-    :return: communities generator
-    """
-
-    def _bfs(graph, source):
-        """An implementation of BFS for finding connected nodes."""
-        _seen = set()
-        _queue = {source}
-
-        while _queue:
-            _current_nodes = _queue
-            _queue = set()
-
-            for _node in _current_nodes:
-                if _node not in _seen:
-                    _seen.add(_node)
-                    _queue.update(graph.adjacent(_node))
-
-        return _seen
-
-    seen = set()
-
-    for node in graph.nodes:
-        if node not in seen:
-            seen_from_node = _bfs(graph, node)
-            seen.update(seen_from_node)
-            yield seen_from_node
 
 
 def calculate_betweenness(graph):
