@@ -121,33 +121,28 @@ class UnorderedTupleKeyDict(MutableMapping):
         return len(self._map)
 
 
-def girvan_newmann(edges, adj_matrix):
+def girvan_newmann(graph):
     """
     Implements the Girvan-Newmann algorithm.
 
-    :param edges: dict of edge weights
-    :param adj_matrix: adjacency matrix
-    :return: the best found communities determined by modularity
+    :param graph: the Graph instance
     """
     best_modularity = None
     best_communities = None
 
-    while edges:
-        edge_betweenness = calculate_betweenness(edges, adj_matrix)
+    while graph.edges:
+        edge_betweenness = calculate_betweenness(graph)
 
         max_betweenness = max(edge_betweenness.values())
         edges_to_remove = [e for e, b in edge_betweenness.items()
                            if b == max_betweenness]
 
-        for node_1, node_2 in edges_to_remove:
-            edges.pop((node_1, node_2))
+        for edge in edges_to_remove:
+            graph.remove_edge(edge)
 
-            adj_matrix[node_1].remove(node_2)
-            adj_matrix[node_2].remove(node_1)
-
-        if edges:
-            curr_communities = tuple(communities(adj_matrix))
-            curr_modularity = modularity(curr_communities, edges, adj_matrix)
+        if graph.edges:
+            curr_communities = tuple(communities(graph))
+            curr_modularity = modularity(curr_communities, graph)
 
             if best_modularity is None or curr_modularity > best_modularity:
                 best_communities = curr_communities
@@ -156,14 +151,12 @@ def girvan_newmann(edges, adj_matrix):
     return best_communities, best_modularity
 
 
-def modularity(communities, edges, adj_matrix):
+def modularity(communities, graph):
     """
     Computes the modularity for the given communities.
 
     :param communities: the communities
-    :param edges: dict of edge weights
-    :param adj_matrix: adjacency matrix
-    :return: the computed modularity
+    :param graph: the Graph instance
     """
     def _connected(_i, _j, _communities):
         """Returns true if the given nodes are in the same community."""
@@ -174,13 +167,13 @@ def modularity(communities, edges, adj_matrix):
             return _i in _community and _j in _community
 
     total = 0.0
-    total_weight_doubled = sum(edges.values()) * 2
+    total_weight_doubled = sum(graph.edges.values()) * 2
 
-    for i in adj_matrix.keys():
-        for j in adj_matrix.keys():
-            weight_ij = edges.get((i, j), 0.0)
-            weight_i = sum(edges.get((i, k), 0.0) for k in adj_matrix[i])
-            weight_k = sum(edges.get((j, k), 0.0) for k in adj_matrix[j])
+    for i in graph.nodes:
+        for j in graph.nodes:
+            weight_ij = graph.edges.get((i, j), 0.0)
+            weight_i = sum(graph.edges.get((i, k), 0.0) for k in graph.adjacent(i))
+            weight_k = sum(graph.edges.get((j, k), 0.0) for k in graph.adjacent(j))
 
             total += ((weight_ij - (weight_i * weight_k) / total_weight_doubled)
                       * _connected(i, j, communities))
@@ -188,14 +181,15 @@ def modularity(communities, edges, adj_matrix):
     return total / total_weight_doubled
 
 
-def communities(adj_matrix):
+def communities(graph):
     """
     Finds communities (groups of connected nodes) in the given graph.
 
-    :param adj_matrix: the adjacency matrix
+    :param graph: the Graph instance
     :return: communities generator
     """
-    def _bfs(adj_matrix, source):
+
+    def _bfs(graph, source):
         """An implementation of BFS for finding connected nodes."""
         _seen = set()
         _queue = {source}
@@ -207,32 +201,31 @@ def communities(adj_matrix):
             for _node in _current_nodes:
                 if _node not in _seen:
                     _seen.add(_node)
-                    _queue.update(adj_matrix[_node])
+                    _queue.update(graph.adjacent(_node))
 
         return _seen
 
     seen = set()
 
-    for node in adj_matrix.keys():
+    for node in graph.nodes:
         if node not in seen:
-            seen_from_node = _bfs(adj_matrix, node)
+            seen_from_node = _bfs(graph, node)
             seen.update(seen_from_node)
             yield seen_from_node
 
 
-def calculate_betweenness(edges, adj_matrix):
+def calculate_betweenness(graph):
     """
     Calculates edge betweenness for the given graph.
 
-    :param edges: dict of edge weights
-    :param adj_matrix: adjacency matrix
+    :param graph: the Graph instance
     :return: the edge betweenness dict
     """
-    successors = floyd_warshall(edges, adj_matrix)
-    centralities = dict.fromkeys(edges, 0.0)
+    successors = floyd_warshall(graph)
+    centralities = dict.fromkeys(graph.edges, 0.0)
 
-    for i in adj_matrix.keys():
-        for j in adj_matrix.keys():
+    for i in graph.nodes:
+        for j in graph.nodes:
             paths = list(shortest_paths(successors, i, j))
             update_centralities(paths, centralities)
 
@@ -242,30 +235,29 @@ def calculate_betweenness(edges, adj_matrix):
     return centralities
 
 
-def floyd_warshall(edges, adj_matrix):
+def floyd_warshall(graph):
     """
     Implements the Floyd-Warshall algorithm for weighted undirected graphs.
     This implementation keeps track of all shortest paths between node pairs.
 
-    :param edges: dict of edge weights
-    :param adj_matrix: adjacency matrix
+    :param graph: the Graph instance
     :return: a dict of node successors for path reconstruction
     """
     costs = defaultdict(lambda: np.inf)
     successors = defaultdict(set)
 
-    for (i, j), weight in edges.items():
+    for (i, j), weight in graph.edges.items():
         costs[i, j] = costs[j, i] = weight
         successors[i, j].add(j)
         successors[j, i].add(i)
 
-    for node in adj_matrix.keys():
+    for node in graph.nodes:
         costs[node, node] = 0
 
-    for k in adj_matrix.keys():
-        for i in adj_matrix.keys():
+    for k in graph.nodes:
+        for i in graph.nodes:
             cost_ik = costs[i, k]
-            for j in adj_matrix.keys():
+            for j in graph.nodes:
                 cost_ik_kj = cost_ik + costs[k, j]
                 cost_ij = costs[i, j]
 
