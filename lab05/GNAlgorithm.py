@@ -1,4 +1,5 @@
 import sys
+from copy import deepcopy
 from collections import defaultdict
 from collections.abc import MutableMapping
 
@@ -50,6 +51,10 @@ class Graph:
 
                 seen.update(seen_from_node)
                 yield seen_from_node
+
+    def copy(self):
+        """Returns a copy of this graph."""
+        return Graph(deepcopy(self.edges), deepcopy(self.adj_matrix))
 
     @staticmethod
     def from_stdin():
