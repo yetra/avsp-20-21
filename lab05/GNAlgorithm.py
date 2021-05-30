@@ -31,27 +31,22 @@ class Graph:
 
     def communities(self):
         """Returns a generator of graph communities (connected node groups)."""
-        def _bfs(graph, source):
-            """An implementation of BFS for finding connected nodes."""
-            _seen = set()
-            _queue = {source}
-
-            while _queue:
-                _current_nodes = _queue
-                _queue = set()
-
-                for _node in _current_nodes:
-                    if _node not in _seen:
-                        _seen.add(_node)
-                        _queue.update(graph.adjacent(_node))
-
-            return _seen
-
         seen = set()
 
         for node in self.nodes:
             if node not in seen:
-                seen_from_node = _bfs(self, node)
+                # BFS starting from node
+                seen_from_node = set()
+                queue = {node}
+
+                while queue:
+                    curr_queue, queue = queue, set()
+
+                    for queued_node in curr_queue:
+                        if queued_node not in seen_from_node:
+                            seen_from_node.add(queued_node)
+                            queue.update(self.adjacent(queued_node))
+
                 seen.update(seen_from_node)
                 yield seen_from_node
 
