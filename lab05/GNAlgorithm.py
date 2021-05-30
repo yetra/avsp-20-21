@@ -31,6 +31,41 @@ class UnorderedTupleKeyDict(MutableMapping):
         return len(self._map)
 
 
+def girvan_newmann(edges, adj_matrix):
+    """
+    Implements the Girvan-Newmann algorithm.
+
+    :param edges: dict of edge weights
+    :param adj_matrix: adjacency matrix
+    :return: the best found communities determined by modularity
+    """
+    best_modularity = None
+    best_communities = None
+
+    while edges:
+        edge_betweenness = calculate_betweenness(edges, adj_matrix)
+
+        max_betweenness = max(edge_betweenness.values())
+        edges_to_remove = [e for e, b in edge_betweenness.items()
+                           if b == max_betweenness]
+
+        for node_1, node_2 in edges_to_remove:
+            edges.pop((node_1, node_2))
+
+            adj_matrix[node_1].remove(node_2)
+            adj_matrix[node_2].remove(node_1)
+
+        if edges:
+            curr_communities = tuple(communities(adj_matrix))
+            curr_modularity = modularity(curr_communities, edges, adj_matrix)
+
+            if best_modularity is None or curr_modularity > best_modularity:
+                best_communities = curr_communities
+                best_modularity = curr_modularity
+
+    return best_communities, best_modularity
+
+
 def modularity(communities, edges, adj_matrix):
     """
     Computes the modularity for the given communities.
