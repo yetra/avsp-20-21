@@ -60,7 +60,7 @@ class Graph:
     def from_stdin():
         """Creates a Graph by reading edges and properties from sys.stdin."""
         edges, adj_matrix = Graph._parse_edges()
-        properties = Graph._parse_properties()
+        properties = Graph._parse_properties(adj_matrix)
 
         # update weights using node properties
         for node_1, node_2 in edges:
@@ -97,7 +97,7 @@ class Graph:
         return edges, adj_matrix
 
     @staticmethod
-    def _parse_properties():
+    def _parse_properties(adj_matrix):
         """
         Parses node properties from sys.stdin.
 
@@ -105,6 +105,7 @@ class Graph:
         The first integer is the index of the node and the remaining integers
         are values of properties.
 
+        :param adj_matrix: adjacency matrix (for adding isolated nodes)
         :return: a dict of property vectors (numpy.ndarray)
         """
         properties = {}
@@ -117,6 +118,10 @@ class Graph:
             line_parts = list(map(int, line.split()))
             node, properties_vector = line_parts[0], np.array(line_parts[1:])
             properties[node] = properties_vector
+
+            # add isolated nodes
+            if node not in adj_matrix:
+                adj_matrix[node] = []
 
         return properties
 
