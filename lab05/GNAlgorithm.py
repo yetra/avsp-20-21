@@ -158,13 +158,12 @@ def parse_properties():
     return properties
 
 
-def add_weights(edges, properties):
+def update_weights(edges, properties):
     """
-    Adds weights to the given edges dict using node properties.
+    Updates edge weights using node properties.
 
     :param edges: dict of graph edges
     :param properties: dict of node property vectors
-    :return: updated edges dict
     """
     for node_1, node_2 in edges:
         max_similarity = len(properties[node_1])
@@ -172,5 +171,3 @@ def add_weights(edges, properties):
         weight = max_similarity - similarity + 1
 
         edges[node_1, node_2] = weight
-
-    return edges
