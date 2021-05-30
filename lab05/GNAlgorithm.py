@@ -234,7 +234,7 @@ def calculate_betweenness(graph):
             update_centralities(paths, centralities)
 
     for key, centrality in centralities.items():
-        centralities[key] = centrality / 2.0
+        centralities[key] = round(centrality / 2.0, 4)
 
     return centralities
 
