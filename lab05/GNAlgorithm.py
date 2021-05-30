@@ -220,7 +220,7 @@ def calculate_modularity(communities, graph):
     if abs(modularity) < 1e-5:
         modularity = 0.0
 
-    return modularity
+    return round(modularity, 4)
 
 
 def calculate_betweenness(graph):
