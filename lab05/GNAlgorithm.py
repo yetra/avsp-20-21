@@ -31,6 +31,38 @@ class UnorderedTupleKeyDict(MutableMapping):
         return len(self._map)
 
 
+def communities(adj_matrix):
+    """
+    Finds communities (groups of connected nodes) in the given graph.
+
+    :param adj_matrix: the adjacency matrix
+    :return: communities generator
+    """
+    def _bfs(adj_matrix, source):
+        """An implementation of BFS for finding connected nodes."""
+        _seen = set()
+        _queue = {source}
+
+        while _queue:
+            _current_nodes = _queue
+            _queue = set()
+
+            for _node in _current_nodes:
+                if _node not in _seen:
+                    _seen.add(_node)
+                    _queue.update(adj_matrix[_node])
+
+        return _seen
+
+    seen = set()
+
+    for node in adj_matrix.keys():
+        if node not in seen:
+            seen_from_node = _bfs(adj_matrix, node)
+            seen.update(seen_from_node)
+            yield seen_from_node
+
+
 def calculate_betweenness(edges, adj_matrix):
     """
     Calculates edge betweenness for the given graph.
