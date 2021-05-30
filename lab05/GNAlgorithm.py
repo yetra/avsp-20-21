@@ -179,7 +179,7 @@ def girvan_newmann(graph):
         edge_betweenness = calculate_betweenness(graph)
 
         max_betweenness = max(edge_betweenness.values())
-        edges_to_remove = [list(e) for e, b in edge_betweenness.items()
+        edges_to_remove = [sorted(list(e)) for e, b in edge_betweenness.items()
                            if b == max_betweenness]
 
         # print sorted edges_to_remove
