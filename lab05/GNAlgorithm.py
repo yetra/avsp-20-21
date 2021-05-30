@@ -169,6 +169,13 @@ def girvan_newmann(graph):
     best_communities = None
 
     while graph.edges:
+        communities = tuple(graph.communities())
+        modularity = calculate_modularity(communities, graph_copy)
+
+        if best_modularity is None or modularity > best_modularity:
+            best_communities = communities
+            best_modularity = modularity
+
         edge_betweenness = calculate_betweenness(graph)
 
         max_betweenness = max(edge_betweenness.values())
@@ -182,14 +189,6 @@ def girvan_newmann(graph):
 
         for edge in edges_to_remove:
             graph.remove_edge(edge)
-
-        if graph.edges:
-            communities = tuple(graph.communities())
-            modularity = calculate_modularity(communities, graph_copy)
-
-            if best_modularity is None or modularity > best_modularity:
-                best_communities = communities
-                best_modularity = modularity
 
     # print sorted best_communities
     sorted_best_communities = [sorted(c) for c in best_communities]
