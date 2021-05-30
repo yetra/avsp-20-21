@@ -1,7 +1,7 @@
 import sys
-from copy import deepcopy
 from collections import defaultdict
 from collections.abc import MutableMapping
+from copy import deepcopy
 
 import numpy as np
 
@@ -164,6 +164,7 @@ def girvan_newmann(graph):
     :param graph: the Graph instance
     :return: the best found communities based on modularity
     """
+    graph_copy = graph.copy()
     best_modularity = None
     best_communities = None
 
@@ -184,7 +185,7 @@ def girvan_newmann(graph):
 
         if graph.edges:
             communities = tuple(graph.communities())
-            modularity = calculate_modularity(communities, graph)
+            modularity = calculate_modularity(communities, graph_copy)
 
             if best_modularity is None or modularity > best_modularity:
                 best_communities = communities
