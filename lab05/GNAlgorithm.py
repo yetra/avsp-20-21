@@ -141,6 +141,10 @@ class UnorderedTupleKeyDict(MutableMapping):
     def __len__(self):
         return len(self._map)
 
+    @staticmethod
+    def fromkeys(iterable, value=None):
+        return UnorderedTupleKeyDict(dict.fromkeys(iterable, value))
+
 
 def girvan_newmann(graph):
     """
@@ -222,7 +226,7 @@ def calculate_betweenness(graph):
     :return: the edge betweenness dict
     """
     successors = floyd_warshall(graph)
-    centralities = dict.fromkeys(graph.edges, 0.0)
+    centralities = UnorderedTupleKeyDict.fromkeys(graph.edges, 0.0)
 
     for i in graph.nodes:
         for j in graph.nodes:
