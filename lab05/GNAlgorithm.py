@@ -22,6 +22,13 @@ class Graph:
         """Returns nodes adjacent to the given node."""
         return self.adj_matrix[node]
 
+    def remove_edge(self, edge):
+        """Removes the given edge from the graph."""
+        node_1, node_2 = edge
+        self.edges.pop(edge)
+        self.adj_matrix[node_1].remove(node_2)
+        self.adj_matrix[node_2].remove(node_1)
+
     @staticmethod
     def from_stdin():
         """Creates a Graph by reading edges and properties from sys.stdin."""
