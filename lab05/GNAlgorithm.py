@@ -70,6 +70,9 @@ def update_centralities(paths, centralities):
     :param centralities: dict of edge centralities
     :return: the updated centralities dict
     """
+    if len(paths) == 0:
+        return
+
     centrality_coeff = 1.0 / len(paths)
 
     for path in paths:
