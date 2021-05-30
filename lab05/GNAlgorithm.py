@@ -160,12 +160,11 @@ def girvan_newmann(graph):
         edge_betweenness = calculate_betweenness(graph)
 
         max_betweenness = max(edge_betweenness.values())
-        edges_to_remove = [e for e, b in edge_betweenness.items()
+        edges_to_remove = [list(e) for e, b in edge_betweenness.items()
                            if b == max_betweenness]
 
         # print sorted edges_to_remove
         edges_to_remove.sort(key=lambda e: (e[0], e[1]))
-        print('\n'.join(map(str, edges_to_remove)))
         for e in edges_to_remove:
             print(*e)
 
@@ -183,7 +182,7 @@ def girvan_newmann(graph):
     # print sorted best_communities
     sorted_best_communities = [sorted(c) for c in best_communities]
     sorted_best_communities.sort(key=lambda c: (len(c), c[0]))
-    print(' '.join(map(lambda c: '-'.join(map(str, c)), best_communities)))
+    print(' '.join(map(lambda c: '-'.join(map(str, c)), sorted_best_communities)))
 
     return best_communities
 
