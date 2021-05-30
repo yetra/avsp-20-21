@@ -6,7 +6,7 @@ import numpy as np
 
 class UnorderedTupleKeyDict(MutableMapping):
     """
-    A dict of "unordered" tuple keys -- using the key (a, b) or (b, a)
+    A dict of "unordered" tuple keys i.e. using the key (a, b) or (b, a)
     produces the same result.
     """
 
@@ -29,6 +29,38 @@ class UnorderedTupleKeyDict(MutableMapping):
 
     def __len__(self):
         return len(self._map)
+
+
+def modularity(communities, edges, adj_matrix):
+    """
+    Computes the modularity for the given communities.
+
+    :param communities: the communities
+    :param edges: dict of edge weights
+    :param adj_matrix: adjacency matrix
+    :return: the computed modularity
+    """
+    def _connected(_i, _j, _communities):
+        """Returns true if the given nodes are in the same community."""
+        for _community in _communities:
+            if _i not in _community and _j not in _community:
+                continue
+
+            return _i in _community and _j in _community
+
+    total = 0.0
+    total_weight_doubled = sum(edges.values()) * 2
+
+    for i in adj_matrix.keys():
+        for j in adj_matrix.keys():
+            weight_ij = edges.get((i, j), 0.0)
+            weight_i = sum(edges.get((i, k), 0.0) for k in adj_matrix[i])
+            weight_k = sum(edges.get((j, k), 0.0) for k in adj_matrix[j])
+
+            total += ((weight_ij - (weight_i * weight_k) / total_weight_doubled)
+                      * _connected(i, j, communities))
+
+    return total / total_weight_doubled
 
 
 def communities(adj_matrix):
