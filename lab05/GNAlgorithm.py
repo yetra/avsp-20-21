@@ -62,6 +62,22 @@ def shortest_paths(successors, start_node, end_node):
                 yield [start_node] + rest
 
 
+def update_centralities(paths, centralities):
+    """
+    Updates edge centralities for the given paths.
+
+    :param paths: the shortest paths whose edges should be updated
+    :param centralities: dict of edge centralities
+    :return: the updated centralities dict
+    """
+    centrality_coeff = 1.0 / len(paths)
+
+    for path in paths:
+        for i, j in zip(path[:-1], path[1:]):
+            key = (i, j) if (i, j) in centralities else (j, i)
+            centralities[key] += centrality_coeff
+
+
 def parse_edges():
     """
     Parses graph edges from sys.stdin.
