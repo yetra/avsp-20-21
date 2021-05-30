@@ -195,13 +195,13 @@ def calculate_modularity(communities, graph):
     :param communities: the communities
     :param graph: the Graph instance
     """
-    def _connected(_i, _j, _communities):
-        """Returns true if the given nodes are in the same community."""
-        for _community in _communities:
-            if _i not in _community and _j not in _community:
+    def ij_connected():
+        """Returns True if the nodes i and j are in the same community."""
+        for community in communities:
+            if i not in community and j not in community:
                 continue
 
-            return _i in _community and _j in _community
+            return i in community and j in community
 
     total = 0.0
     total_weight_doubled = sum(graph.edges.values()) * 2
@@ -213,7 +213,7 @@ def calculate_modularity(communities, graph):
             weight_k = sum(graph.edges.get((j, k), 0.0) for k in graph.adjacent(j))
 
             total += ((weight_ij - (weight_i * weight_k) / total_weight_doubled)
-                      * _connected(i, j, communities))
+                      * ij_connected())
 
     return total / total_weight_doubled
 
