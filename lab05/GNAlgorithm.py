@@ -1,7 +1,34 @@
 import sys
-from collections import defaultdict
+from collections import defaultdict, MutableMapping
 
 import numpy as np
+
+
+class UnorderedTupleKeyDict(MutableMapping):
+    """
+    A dict of "unordered" tuple keys -- using the key (a, b) or (b, a)
+    produces the same result.
+    """
+
+    def __init__(self, arg=None):
+        self._map = {}
+        if arg is not None:
+            self.update(arg)
+
+    def __getitem__(self, key):
+        return self._map[frozenset(key)]
+
+    def __setitem__(self, key, value):
+        self._map[frozenset(key)] = value
+
+    def __delitem__(self, key):
+        del self._map[frozenset(key)]
+
+    def __iter__(self):
+        return iter(self._map)
+
+    def __len__(self):
+        return len(self._map)
 
 
 def floyd_warshall(edges, adj_matrix):
@@ -90,7 +117,7 @@ def parse_edges():
 
     :return: the parsed edges dict and adjacency matrix
     """
-    edges = {}
+    edges = UnorderedTupleKeyDict()
     adj_matrix = defaultdict(list)
 
     while True:
