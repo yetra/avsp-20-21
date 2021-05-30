@@ -215,7 +215,12 @@ def calculate_modularity(communities, graph):
             total += ((weight_ij - (weight_i * weight_k) / total_weight_doubled)
                       * ij_connected())
 
-    return total / total_weight_doubled
+    modularity = total / total_weight_doubled
+
+    if abs(modularity) < 1e-5:
+        modularity = 0.0
+
+    return modularity
 
 
 def calculate_betweenness(graph):
