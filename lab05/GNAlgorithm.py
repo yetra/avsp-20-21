@@ -158,8 +158,7 @@ def update_centralities(paths, centralities):
 
     for path in paths:
         for i, j in zip(path[:-1], path[1:]):
-            key = (i, j) if (i, j) in centralities else (j, i)
-            centralities[key] += centrality_coeff
+            centralities[i, j] += centrality_coeff
 
 
 def parse_edges():
