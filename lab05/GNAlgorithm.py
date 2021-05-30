@@ -1,5 +1,6 @@
 import sys
-from collections import defaultdict, MutableMapping
+from collections import defaultdict
+from collections.abc import MutableMapping
 
 import numpy as np
 
