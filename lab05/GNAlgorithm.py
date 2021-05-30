@@ -41,6 +41,27 @@ def floyd_warshall(edges, adj_matrix):
     return successors
 
 
+def shortest_paths(successors, start_node, end_node):
+    """
+    Reconstructs all the shortest paths between the given nodes using a dict
+    of successor nodes.
+
+    :param successors: Floyd-Warshall dict of successor nodes obtained
+    :param start_node: the first node of the shortest paths
+    :param end_node: the last node of the shortest paths
+    :return: a generator of shortest paths
+    """
+    if len(successors[start_node, end_node]) == 0:
+        if start_node == end_node:
+            yield [end_node]
+        else:
+            pass  # no path
+    else:
+        for k in successors[start_node, end_node]:
+            for rest in shortest_paths(successors, k, end_node):
+                yield [start_node] + rest
+
+
 def parse_edges():
     """
     Parses graph edges from sys.stdin.
