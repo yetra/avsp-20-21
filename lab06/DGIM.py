@@ -50,18 +50,9 @@ class DGIM:
             return
 
         # add 1 to buckets
-        bucket = Bucket(self.timestamp, 1)
-        self.buckets.append(bucket)
-
+        self.buckets.append(Bucket(self.timestamp, 1))
         # and merge buckets while there are 3 of the same size
-        i = self._buckets_need_merge()
-        while i:
-            # merge oldest two of the same size
-            self.buckets[i - 1].size += self.buckets[i - 2]
-            self.buckets[i - 1].timestamp = self.buckets[i - 2].timestamp
-            del self.buckets[i - 2]
-
-            i = self._buckets_need_merge()
+        self._merge_buckets()
 
     def _bucket_is_too_old(self):
         """Returns True if bucket is too old and should be removed."""
@@ -79,6 +70,18 @@ class DGIM:
                 return i
 
         return False
+
+    def _merge_buckets(self):
+        """Merges buckets if needed."""
+        i = self._buckets_need_merge()
+
+        while i:
+            # merge oldest two of the same size
+            self.buckets[i - 1].size += self.buckets[i - 2]
+            self.buckets[i - 1].timestamp = self.buckets[i - 2].timestamp
+            del self.buckets[i - 2]
+
+            i = self._buckets_need_merge()
 
 
 if __name__ == '__main__':
