@@ -33,6 +33,10 @@ class DGIM:
         self.timestamp = 0
         self.buckets = deque()
 
+    def _bucket_is_too_old(self):
+        """Returns True if bucket is too old and should be removed."""
+        return self.buckets[0].timestamp <= (self.timestamp - self.window_size)
+
 
 if __name__ == '__main__':
     window_size = int(sys.stdin.readline().rstrip())
