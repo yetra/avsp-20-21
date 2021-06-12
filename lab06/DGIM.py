@@ -85,9 +85,9 @@ class DGIM:
             return
 
         for i in range(len(self.buckets) - 1, 1, -1):
-            if (self.buckets[i].size
-                    == self.buckets[i - 1].size
-                    == self.buckets[i - 2].size):
+            curr_size = self.buckets[i].size
+            if (curr_size == self.buckets[i - 1].size
+                    and curr_size == self.buckets[i - 2].size):
                 return i
 
         return
