@@ -50,9 +50,9 @@ class DGIM:
         self.buckets.append(Bucket(self.timestamp, 1))
         self._merge_buckets()
 
-    def query(self, k):
+    def count_ones(self, k):
         """
-        Performs a DGIM query.
+        Counts 1's in the last k bits of the stream.
 
         :param k: the number of last bits to check for 1's
         :return: the number of 1's in the last k bits
