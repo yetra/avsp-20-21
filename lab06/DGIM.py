@@ -50,6 +50,25 @@ class DGIM:
         self.buckets.append(Bucket(self.timestamp, 1))
         self._merge_buckets()
 
+    def query(self, k):
+        """
+        Performs a DGIM query.
+
+        :param k: the number of last bits to check for 1's
+        :return: the number of 1's in the last k bits
+        """
+        total_size = 0
+        last_bucket_size = 0
+
+        for bucket in self.buckets:
+            if bucket.timestamp <= self.timestamp - k:
+                break
+
+            total_size += bucket.size
+            last_bucket_size = bucket.size
+
+        return total_size + int(last_bucket_size / 2)
+
     def _bucket_is_too_old(self):
         """Returns True if bucket is too old and should be removed."""
         return self.buckets[0].timestamp <= (self.timestamp - self.window_size)
