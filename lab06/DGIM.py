@@ -41,17 +41,13 @@ class DGIM:
         """
         self.timestamp += 1
 
-        # delete oldest bucket if too old
         if self._bucket_is_too_old():
             self.buckets.popleft()
 
-        # skip 0
         if bit == 0:
             return
 
-        # add 1 to buckets
         self.buckets.append(Bucket(self.timestamp, 1))
-        # and merge buckets while there are 3 of the same size
         self._merge_buckets()
 
     def _bucket_is_too_old(self):
