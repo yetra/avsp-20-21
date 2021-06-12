@@ -70,7 +70,7 @@ class DGIM:
             total_size += self.buckets[i].size
             last_bucket_size = self.buckets[i].size
 
-        return total_size + int(last_bucket_size / 2)
+        return total_size - int(last_bucket_size / 2)
 
     def _bucket_is_too_old(self):
         """Returns True if bucket is too old and should be removed."""
