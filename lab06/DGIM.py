@@ -63,12 +63,12 @@ class DGIM:
         total_size = 0
         last_bucket_size = 0
 
-        for bucket in self.buckets:
-            if bucket.timestamp <= self.timestamp - k:
+        for i in range(len(self.buckets) - 1, -1, -1):
+            if self.buckets[i].timestamp <= self.timestamp - k:
                 break
 
-            total_size += bucket.size
-            last_bucket_size = bucket.size
+            total_size += self.buckets[i].size
+            last_bucket_size = self.buckets[i].size
 
         return total_size + int(last_bucket_size / 2)
 
