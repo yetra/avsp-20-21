@@ -119,6 +119,5 @@ if __name__ == '__main__':
             print(dgim.count_ones(query_window_size))
 
         else:
-            stream = map(int, line.split())
-            for bit in stream:
-                dgim.update(bit)
+            for bit in line:
+                dgim.update(int(bit))
