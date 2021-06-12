@@ -99,7 +99,6 @@ class DGIM:
         while i is not None:
             # merge oldest two of the same size
             self.buckets[i - 1].size += self.buckets[i - 2].size
-            self.buckets[i - 1].timestamp = self.buckets[i - 2].timestamp
             del self.buckets[i - 2]
 
             i = self._merge_index()
