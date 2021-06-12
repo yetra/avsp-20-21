@@ -37,6 +37,19 @@ class DGIM:
         """Returns True if bucket is too old and should be removed."""
         return self.buckets[0].timestamp <= (self.timestamp - self.window_size)
 
+    def _buckets_need_merge(self):
+        """Returns True if there are 3 buckets of the same size."""
+        if len(self.buckets) < 3:
+            return False
+
+        for i in range(len(self.buckets) - 1, 1, -1):
+            if (self.buckets[i].size
+                    == self.buckets[i - 1].size
+                    == self.buckets[i - 2].size):
+                return i
+
+        return False
+
 
 if __name__ == '__main__':
     window_size = int(sys.stdin.readline().rstrip())
