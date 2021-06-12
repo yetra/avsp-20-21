@@ -33,6 +33,36 @@ class DGIM:
         self.timestamp = 0
         self.buckets = deque()
 
+    def update(self, bit):
+        """
+        Updates the DGIM buckets with the given bit.
+
+        :param bit: the bit to handle
+        """
+        self.timestamp += 1
+
+        # delete oldest bucket if too old
+        if self._bucket_is_too_old():
+            self.buckets.popleft()
+
+        # skip 0
+        if bit == 0:
+            return
+
+        # add 1 to buckets
+        bucket = Bucket(self.timestamp, 1)
+        self.buckets.append(bucket)
+
+        # and merge buckets while there are 3 of the same size
+        i = self._buckets_need_merge()
+        while i:
+            # merge oldest two of the same size
+            self.buckets[i - 1].size += self.buckets[i - 2]
+            self.buckets[i - 1].timestamp = self.buckets[i - 2].timestamp
+            del self.buckets[i - 2]
+
+            i = self._buckets_need_merge()
+
     def _bucket_is_too_old(self):
         """Returns True if bucket is too old and should be removed."""
         return self.buckets[0].timestamp <= (self.timestamp - self.window_size)
