@@ -15,6 +15,9 @@ class Bucket:
         self.timestamp = timestamp
         self.size = size
 
+    def __str__(self):
+        return f'Bucket(t={self.timestamp}, size={self.size})'
+
 
 class DGIM:
     """
