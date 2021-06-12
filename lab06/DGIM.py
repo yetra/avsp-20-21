@@ -44,7 +44,7 @@ class DGIM:
         """
         self.timestamp += 1
 
-        if self._bucket_is_too_old():
+        if self.buckets and self._bucket_is_too_old():
             self.buckets.popleft()
 
         if bit == 0:
