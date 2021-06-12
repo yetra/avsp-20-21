@@ -59,7 +59,10 @@ class DGIM:
         return self.buckets[0].timestamp <= (self.timestamp - self.window_size)
 
     def _buckets_need_merge(self):
-        """Returns True if there are 3 buckets of the same size."""
+        """
+        Returns the index of the newest such bucket if there are 3 buckets
+        of the same size, else False.
+        """
         if len(self.buckets) < 3:
             return False
 
