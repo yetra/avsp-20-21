@@ -61,10 +61,10 @@ class DGIM:
     def _buckets_need_merge(self):
         """
         Returns the index of the newest such bucket if there are 3 buckets
-        of the same size, else False.
+        of the same size, else None.
         """
         if len(self.buckets) < 3:
-            return False
+            return
 
         for i in range(len(self.buckets) - 1, 1, -1):
             if (self.buckets[i].size
@@ -72,13 +72,13 @@ class DGIM:
                     == self.buckets[i - 2].size):
                 return i
 
-        return False
+        return
 
     def _merge_buckets(self):
         """Merges buckets if needed."""
         i = self._buckets_need_merge()
 
-        while i:
+        while i is not None:
             # merge oldest two of the same size
             self.buckets[i - 1].size += self.buckets[i - 2]
             self.buckets[i - 1].timestamp = self.buckets[i - 2].timestamp
