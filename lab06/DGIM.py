@@ -1,4 +1,5 @@
 import sys
+from collections import deque
 
 
 class Bucket:
@@ -13,6 +14,18 @@ class Bucket:
         """
         self.timestamp = timestamp
         self.size = size
+
+
+class DGIM:
+    """
+    An implementation of the Datar-Gionis-Indyk-Motwani (DGIM) algorithm
+    for counting 1's.
+    """
+
+    def __init__(self):
+        """Initializes a DGIM instance."""
+        self.timestamp = 0
+        self.buckets = deque()
 
 
 if __name__ == '__main__':
