@@ -22,8 +22,14 @@ class DGIM:
     for counting 1's.
     """
 
-    def __init__(self):
-        """Initializes a DGIM instance."""
+    def __init__(self, window_size):
+        """
+        Initializes a DGIM instance.
+
+        :param window_size: size of the currently observable stream part
+        """
+        self.window_size = window_size
+
         self.timestamp = 0
         self.buckets = deque()
 
