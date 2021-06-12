@@ -104,6 +104,7 @@ class DGIM:
 
 if __name__ == '__main__':
     window_size = int(sys.stdin.readline().rstrip())
+    dgim = DGIM(window_size)
 
     while True:
         line = sys.stdin.readline().rstrip()
@@ -111,11 +112,10 @@ if __name__ == '__main__':
             break
 
         if line.startswith('q'):
-            # query
             query_window_size = int(line[2:])
-            # TODO execute query
+            print(dgim.count_ones(query_window_size))
 
         else:
-            # stream
             stream = map(int, line.split())
-            # TODO handle stream
+            for bit in stream:
+                dgim.update(bit)
